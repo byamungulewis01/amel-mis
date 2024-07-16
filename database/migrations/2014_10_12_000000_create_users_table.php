@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('profile_image')->nullable();
-            $table->enum('department',['field','finance','manager','admin']);
+            $table->enum('department',['field','finance','manager','procurement','admin']);
             $table->enum('status',['active','inactive']);
             $table->rememberToken();
             $table->timestamps();

@@ -208,10 +208,11 @@ defineProps({
                                                     <select v-model="form.department"
                                                         class="form-select rounded-sm !py-2 !px-3" id="department"
                                                         required>
-                                                        <option disabled selected="">-- Select --</option>
+                                                        <option disabled selected="" value="">-- Select --</option>
                                                         <option value="manager">Management Depart</option>
                                                         <option value="finance">Finance Depart</option>
                                                         <option value="field">Field Depart</option>
+                                                        <option value="procurement">Procurement</option>
                                                     </select>
                                                     <InputError class="mt-2" :message="form.errors.department" />
 
@@ -281,6 +282,7 @@ defineProps({
                                                         <option value="manager">Management Depart</option>
                                                         <option value="finance">Finance Depart</option>
                                                         <option value="field">Field Depart</option>
+                                                        <option value="procurement">Procurement</option>
                                                     </select>
                                                     <InputError class="mt-2" :message="$page.props.errors.department" />
 
