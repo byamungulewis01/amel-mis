@@ -37,7 +37,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::controller(UserController::class)->name('user.')->group(function () {
+    Route::controller(UserController::class)->middleware('user-access:admin,manager')->name('user.')->group(function () {
         Route::get('/users', 'index')->name('index');
         Route::post('/users', 'store')->name('store');
         Route::put('/users/{id}', 'update')->name('update');
@@ -45,9 +45,9 @@ Route::middleware('auth')->group(function () {
     });
     Route::controller(ContractController::class)->name('contract.')->group(function () {
         Route::get('/contracts', 'index')->name('index');
-        Route::post('/contracts', 'store')->name('store');
-        Route::put('/contracts/{id}', 'update')->name('update');
-        Route::delete('/contracts/{id}', 'destroy')->name('destroy');
+        Route::post('/contracts', 'store')->name('store')->middleware('user-access:procurement');
+        Route::put('/contracts/{id}', 'update')->name('update')->middleware('user-access:procurement');
+        Route::delete('/contracts/{id}', 'destroy')->name('destroy')->middleware('user-access:procurement');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

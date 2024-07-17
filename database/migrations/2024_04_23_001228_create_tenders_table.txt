@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('tenders', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('tender_name');
-            $table->bigInteger('bid_security');
-            $table->bigInteger('tender_fees');
-            $table->text('description');
-            $table->date('opening_date');
-            $table->date('submitted_date');
-            $table->json('documents')->nullable();
-            $table->enum('status',['new','won','lost'])->default('new');
+            $table->bigInteger('request_amount');
+            $table->bigInteger('sold_amount')->nullable();
             $table->bigInteger('sales_amount')->nullable();
-            $table->text('explainations')->nullable();
+            $table->string('request_for');
+            $table->string('purchase_order_file');
+            $table->string('estimated_badge_file');
+            $table->enum('status',['pending','in_progress','complete'])->default('pending');
+            $table->string('description')->nullable();
             $table->foreignUuid('stored_by')->constrained('users')->onDelete('restrict');
+            $table->foreignUuid('approved_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->foreignUuid('closed_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });

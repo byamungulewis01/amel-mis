@@ -15,7 +15,7 @@ class TenderController extends Controller
      */
     public function index()
     {
-        $tenders = Tender::where('stored_by',auth()->user()->id)->orderByDesc('created_at')->get();
+        $tenders = Tender::where('stored_by', auth()->user()->id)->orderByDesc('created_at')->get();
         return Inertia::render('Tenders/Index', array('tenders' => $tenders));
     }
     public function tenders()
@@ -39,24 +39,42 @@ class TenderController extends Controller
     {
         $request->validate([
             'tender_name' => 'required',
-            'request_amount' => 'required|numeric',
-            'request_for' => 'required',
-            'purchase_order' => 'required|max:100000',
-            'estimated_badge' => 'required|max:100000',
+            'bid_security' => 'required|numeric',
+            'tender_fees' => 'required|numeric',
+            'description' => 'required',
+            'opening_date' => 'required',
+            'submitted_date' => 'required',
         ]);
-        if ($request->hasFile('purchase_order')) {
-            $purchase_order = $request->file('purchase_order')->store('upload_files');
-            $request->merge(['purchase_order_file' => $purchase_order]);
-        }
-        if ($request->hasFile('estimated_badge')) {
-            $estimated_badge = $request->file('estimated_badge')->store('upload_files');
-            $request->merge(['estimated_badge_file' => $estimated_badge]);
-        }
 
-        $request->merge(['stored_by' => auth()->user()->id]);
+        $request->merge(['stored_by' => auth()->user()->id,
+            // 'documents' => json_encode($request->documents),
+            'documents' => null,
+        ]);
         Tender::create($request->all());
         return Redirect::back()->with('message', 'Tender created successfully');
     }
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'tender_name' => 'required',
+    //         'request_amount' => 'required|numeric',
+    //         'request_for' => 'required',
+    //         'purchase_order' => 'required|max:100000',
+    //         'estimated_badge' => 'required|max:100000',
+    //     ]);
+    //     if ($request->hasFile('purchase_order')) {
+    //         $purchase_order = $request->file('purchase_order')->store('upload_files');
+    //         $request->merge(['purchase_order_file' => $purchase_order]);
+    //     }
+    //     if ($request->hasFile('estimated_badge')) {
+    //         $estimated_badge = $request->file('estimated_badge')->store('upload_files');
+    //         $request->merge(['estimated_badge_file' => $estimated_badge]);
+    //     }
+
+    //     $request->merge(['stored_by' => auth()->user()->id]);
+    //     Tender::create($request->all());
+    //     return Redirect::back()->with('message', 'Tender created successfully');
+    // }
 
     /**
      * Display the specified resource.
@@ -114,10 +132,10 @@ class TenderController extends Controller
     public function approve(string $id)
     {
         $tender = Tender::where('id', $id)->first();
-        $tender->update(['status' => 'in_progress','approved_by' => auth()->user()->id]);
+        $tender->update(['status' => 'in_progress', 'approved_by' => auth()->user()->id]);
         return Redirect::back()->with('message', 'Tender approved successfully.');
     }
-    public function closing(Request $request,string $id)
+    public function closing(Request $request, string $id)
     {
         $request->validate([
             'sold_amount' => 'required|numeric',
@@ -126,7 +144,7 @@ class TenderController extends Controller
         ]);
         $request->merge([
             'status' => 'complete',
-            'closed_by' => auth()->user()->id
+            'closed_by' => auth()->user()->id,
         ]);
         $tender = Tender::where('id', $id)->first();
         $tender->update($request->all());

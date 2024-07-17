@@ -3,38 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contract;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ContractController extends Controller
 {
     public function index()
     {
         $contracts = Contract::orderByDesc('created_at')->get();
-        return Inertia::render('Admin/Contracts', array('contracts' => $contracts));
+        return Inertia::render('Contracts/Index', compact('contracts'));
     }
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'item' => 'required',
-            'quoting_price' => 'required|numeric',
-            'market_price' => 'required|numeric'
+            'contract_number' => 'required',
+            'value' => 'required|numeric',
+            'description' => 'required',
+            'signed_date' => 'required',
+            'status' => 'required',
+            'type' => 'required',
         ]);
+        try {
+            $request->merge(['stored_by' => auth()->user()->id]);
+            Contract::create($request->all());
+        } catch (\Throwable $th) {
+            //throw $th;
+            return Redirect::back()->with('warning', 'Somethings went wrong , contact support');
+        }
 
-        $request->merge(['stored_by' => auth()->user()->id]);
-        Contract::create($request->all());
         return Redirect::back()->with('message', 'Contract Registered successfully');
     }
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required',
-            'item' => 'required',
-            'quoting_price' => 'required|numeric',
-            'market_price' => 'required|numeric',
-            'status' => 'required'
+            'contract_number' => 'required',
+            'value' => 'required|numeric',
+            'description' => 'required',
+            'signed_date' => 'required',
+            'status' => 'required',
+            'type' => 'required',
         ]);
         Contract::findorfail($id)->update($request->all());
         return Redirect::back()->with('message', 'Contract Updated successfully');

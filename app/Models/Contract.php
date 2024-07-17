@@ -11,10 +11,12 @@ class Contract extends Model
     use HasFactory ,HasUuids;
     protected $fillable = [
         'name',
-        'item',
-        'quoting_price',
-        'market_price',
+        'contract_number',
+        'description',
+        'value',
+        'signed_date',
         'status',
+        'type',
         'stored_by',
     ];
 }

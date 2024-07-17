@@ -13,12 +13,11 @@ class UserAccess
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next, ...$departments)
     {
-        if (!in_array($request->user()->role, $roles)) {
+        if (!in_array($request->user()->department, $departments)) {
             abort(401);
         }
-
         return $next($request);
     }
 }

@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
             'phone' => '0785436135',
             'password' => 'byamungu', // password
             'department' => 'admin',
-    
         ]);
     }
 }

@@ -56,13 +56,7 @@ import NavLink from '@/Components/NavLink.vue';
                                 <span class="side-menu__label">Reports</span>
                             </NavLink>
                         </li>
-                        <li class="slide">
-                            <NavLink :href="route('contract.index')"
-                            :active="route().current('contract.index')">
-                                <i class="bx bx-book side-menu__icon"></i>
-                                <span class="side-menu__label">Contracts</span>
-                            </NavLink>
-                        </li>
+
                     </div>
                     <div v-if="$page.props.auth.user.department == 'field'">
                         <li class="slide">
@@ -80,6 +74,22 @@ import NavLink from '@/Components/NavLink.vue';
                         </li>
                     </div>
                     <div v-if="$page.props.auth.user.department == 'finance'">
+                        <li class="slide">
+                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index')">
+                                <i class="bx bx-task side-menu__icon"></i>
+                                <span class="side-menu__label">Tenders</span>
+                            </NavLink>
+                        </li>
+
+                    </div>
+                    <div v-if="$page.props.auth.user.department == 'procurement'">
+                        <li class="slide">
+                            <NavLink :href="route('contract.index')"
+                            :active="route().current('contract.index')">
+                                <i class="bx bx-book side-menu__icon"></i>
+                                <span class="side-menu__label">Contracts</span>
+                            </NavLink>
+                        </li>
                         <li class="slide">
                             <NavLink :href="route('tenders.index')" :active="route().current('tenders.index')">
                                 <i class="bx bx-task side-menu__icon"></i>
