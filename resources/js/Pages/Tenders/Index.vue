@@ -2,13 +2,8 @@
 import { ref } from 'vue';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
 
-import { Head, useForm } from '@inertiajs/vue3';
-import TextInput from '@/Components/TextInput.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Inertia } from "@inertiajs/inertia";
-
+import { Head, Link, useForm } from '@inertiajs/vue3';
 const status = {
     new: {
         title: "New",
@@ -22,65 +17,6 @@ const status = {
         title: "Lost",
         class: "badge bg-outline-success"
     },
-};
-
-// store user into database
-const form = useForm({
-    tender_name: '',
-    bid_security: '',
-    tender_fees: '',
-    description: '',
-    opening_date: '',
-    submitted_date: '',
-    documents: { newPriceSchedule: '', bidSecurity: '', paymentDocument: '', registrationCert: '', taxClearance: '', vatCert: '' },
-
-});
-
-const submit = () => {
-    form.post(route('tenders.store'),
-        {
-            onSuccess: () => {
-                form.reset();
-                const closeButton = document.querySelector('.hs-dropdown-toggle[data-hs-overlay="#addModel"]');
-                if (closeButton) {
-                    closeButton.click();
-                }
-
-            },
-            onError: (errors) => {
-                console.log('error', errors);
-                // Handle error responses or validation errors
-            },
-        }
-    );
-};
-// End Storing user information
-
-// Update user information
-const showUpdateModal = ref(false);
-const selected = ref(null);
-
-const editTender = (tender) => {
-    selected.value = { ...tender, request_amount: tender.request_amount.toString() };
-    showUpdateModal.value = true;
-};
-const updateTender = () => {
-    const form = useForm({
-        tender_name: selected.value.tender_name,
-        request_amount: selected.value.request_amount,
-        request_for: selected.value.request_for,
-        purchase_order: selected.value?.purchase_order,
-        estimated_badge: selected.value?.estimated_badge
-    });
-
-    Inertia.post(route('tenders.update', selected.value.id), {
-        _method: "put",
-        tender_name: form.tender_name,
-        request_amount: form.request_amount,
-        request_for: form.request_for,
-        purchase_order: form.purchase_order,
-        estimated_badge: form.estimated_badge
-    });
 };
 
 
@@ -109,20 +45,6 @@ const destroyTender = (user_id) => {
         },
     });
 };
-// view single tender
-const viewTenderModel = ref(false);
-const selectedTender = ref(null);
-
-const viewTender = (tender) => {
-    selectedTender.value = {
-        ...tender
-        , request_amount: tender.request_amount.toString()
-        , sold_amount: tender.sold_amount.toString()
-        , sales_amount: tender.sales_amount.toString()
-    }; // Create a copy to avoid modifying the original user data
-    viewTenderModel.value = true;
-};
-
 
 
 defineProps({
@@ -169,280 +91,10 @@ defineProps({
                             All Tenders List
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <button data-hs-overlay="#addModel"
+                            <Link :href="route('tenders.create')"
                                 class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                                <i class="ri-add-line  align-middle"></i>New Tender
-                            </button>
-                        </div>
-
-                        <div id="addModel" class="hs-overlay hidden ti-modal">
-                            <div
-                                class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
-                                <div class="ti-modal-content">
-                                    <div class="ti-modal-header">
-                                        <h6 class="modal-title text-[1rem] font-semibold ">Tender Registration</h6>
-                                        <button type="button"
-                                            class="hs-dropdown-toggle !text-[1rem] !font-semibold !text-defaulttextcolor"
-                                            data-hs-overlay="#addModel">
-                                            <span class="sr-only">Close</span>
-                                            <i class="ri-close-line"></i>
-                                        </button>
-                                    </div>
-                                    <form @submit.prevent="submit">
-
-                                        <div class="ti-modal-body">
-
-                                            <div class="grid grid-cols-12 gap-4 px-3">
-
-                                                <label for="tender_name"
-                                                    class="sm:col-span-2 col-span-12 col-form-label">Tender Name</label>
-                                                <div class="sm:col-span-10 col-span-12">
-                                                    <div class="input-group">
-                                                        <TextInput v-model="form.tender_name" type="text" required
-                                                            id="tender_name" placeholder="Enter Tender name here" />
-                                                        <InputError class="mt-2" :message="form.errors.tender_name" />
-
-                                                    </div>
-                                                </div>
-                                                <label for="description"
-                                                    class="sm:col-span-2 col-span-12 col-form-label">Tender
-                                                    Description</label>
-                                                <div class="sm:col-span-10 col-span-12">
-                                                    <div class="input-group">
-                                                        <textarea v-model="form.description" id="description"
-                                                            class="form-control" required
-                                                            placeholder="Description on tender"></textarea>
-                                                        <InputError class="mt-2" :message="form.errors.description" />
-
-                                                    </div>
-                                                </div>
-                                                <div class="xl:col-span-6 col-span-6">
-                                                    <label for="tender_fees" class="form-label">Tender Fees</label>
-                                                    <TextInput v-model="form.tender_fees" type="number" min="0"
-                                                        id="tender_fees" required placeholder="Tender Fees" />
-                                                    <InputError class="mt-2" :message="form.errors.tender_fees" />
-
-                                                </div>
-                                                <div class="xl:col-span-6 col-span-6">
-                                                    <label for="bid_security" class="form-label">Bid Security</label>
-                                                    <TextInput v-model="form.bid_security" type="number" min="0"
-                                                        id="bid_security" required placeholder="Bid Security" />
-                                                    <InputError class="mt-2" :message="form.errors.bid_security" />
-
-                                                </div>
-                                                <div class="xl:col-span-6 col-span-6">
-                                                    <label for="opening_date" class="form-label">Opening Date</label>
-                                                    <TextInput v-model="form.opening_date" type="date" id="opening_date"
-                                                        required />
-                                                    <InputError class="mt-2" :message="form.errors.opening_date" />
-
-                                                </div>
-                                                <div class="xl:col-span-6 col-span-6">
-                                                    <label for="submitted_date" class="form-label">Submitted
-                                                        Date</label>
-                                                    <TextInput v-model="form.submitted_date" type="date"
-                                                        id="submitted_date" required />
-                                                    <InputError class="mt-2" :message="form.errors.submitted_date" />
-
-                                                </div>
-                                                <div class="xl:col-span-12 col-span-12">
-                                                    <hr>
-                                                    <h5>Required Bidding Documents</h5>
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="newPriceSchedule" class="text-muted mb-2">New Price
-                                                        Schedule</label>
-                                                    <input type="file"
-                                                        @input="form.documents.newPriceSchedule = $event.target.files[0]"
-                                                        id="newPriceSchedule" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.newPriceSchedule" />
-
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="bidSecurity" class="text-muted mb-2">Bid
-                                                        Security</label>
-                                                    <input type="file"
-                                                        @input="form.documents.bidSecurity = $event.target.files[0]"
-                                                        id="bidSecurity" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.bidSecurity" />
-
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="paymentDocument" class="text-muted mb-2">Payment for
-                                                        tender Document</label>
-                                                    <input type="file"
-                                                        @input="form.documents.paymentDocument = $event.target.files[0]"
-                                                        id="paymentDocument" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.paymentDocument" />
-
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="registrationCert" class="text-muted mb-2">Registration
-                                                        Certificate</label>
-                                                    <input type="file"
-                                                        @input="form.documents.registrationCert = $event.target.files[0]"
-                                                        id="registrationCert" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.registrationCert" />
-
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="taxClearance" class="text-muted mb-2">Tax Clearance
-                                                        Certificate</label>
-                                                    <input type="file"
-                                                        @input="form.documents.taxClearance = $event.target.files[0]"
-                                                        id="taxClearance" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.taxClearance" />
-
-                                                </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="vatCert" class="text-muted mb-2">VAT Certificate</label>
-                                                    <input type="file" @input="form.documents.vatCert = $event.target.files[0]"
-                                                        id="vatCert" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2" :message="form.errors.vatCert" />
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="ti-modal-footer">
-                                            <button type="button"
-                                                class="hs-dropdown-toggle ti-btn  ti-btn-secondary-full align-middle"
-                                                data-hs-overlay="#addModel">
-                                                Close
-                                            </button>
-
-                                            <PrimaryButton :class="{ 'disabled': form.processing }"
-                                                :disabled="form.processing">Save
-                                                Changes</PrimaryButton>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="showUpdateModal" id="editModel" class="hs-overlay hidden ti-modal">
-                            <div
-                                class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out lg:!max-w-4xl lg:w-full m-3 lg:!mx-auto">
-                                <div class="ti-modal-content">
-                                    <div class="ti-modal-header">
-                                        <h6 class="modal-title text-[1rem] font-semibold">Tender Modification</h6>
-                                        <button type="button"
-                                            class="hs-dropdown-toggle !text-[1rem] !font-semibold !text-defaulttextcolor"
-                                            data-hs-overlay="#editModel">
-                                            <span class="sr-only">Close</span>
-                                            <i class="ri-close-line"></i>
-                                        </button>
-                                    </div>
-                                    <form @submit.prevent="updateTender">
-
-                                        <div class="ti-modal-body">
-
-                                            <div class="grid grid-cols-12 gap-4 px-3">
-                                                <div class="xl:col-span-6 col-span-12">
-                                                    <label for="purchase_order" class="form-label">Purchase Order
-                                                        <span class="text-danger"> (Attachment file)</span></label>
-                                                    <input type="file"
-                                                        @input="selected.purchase_order = $event.target.files[0]"
-                                                        id="purchase_order" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2"
-                                                        :message="$page.props.errors.purchase_order" />
-
-                                                </div>
-                                                <div class="xl:col-span-6 col-span-12">
-                                                    <label for="estimated_badge" class="form-label">Estimate Badget
-                                                        <span class="text-danger"> (Attachment file)</span></label>
-                                                    <input type="file"
-                                                        @input="selected.estimated_badge = $event.target.files[0]"
-                                                        id="estimated_badge" class="block w-full border border-gray-200 focus:shadow-sm dark:focus:shadow-white/10 rounded-sm text-sm focus:z-10 focus:outline-0 focus:border-gray-200 dark:focus:border-white/10 dark:border-white/10 dark:text-white/50
-                                                        file:border-0
-                                                        file:bg-light file:me-4
-                                                        file:py-2 file:px-4
-                                                        dark:file:bg-black/20 dark:file:text-white/50 cursor-pointer">
-                                                    <InputError class="mt-2"
-                                                        :message="$page.props.errors.estimated_badge" />
-
-                                                </div>
-                                                <div class="xl:col-span-12 col-span-12">
-                                                    <hr>
-                                                    <h5 class="text-center">CASH REQUEST FORM</h5>
-                                                </div>
-
-                                                <label for="tender_name"
-                                                    class="sm:col-span-2 col-span-12 col-form-label">Tender Name</label>
-                                                <div class="sm:col-span-10 col-span-12">
-                                                    <div class="input-group">
-                                                        <TextInput v-model="selected.tender_name" type="text"
-                                                            id="tender_name" placeholder="Tender name here" />
-                                                        <InputError class="mt-2"
-                                                            :message="$page.props.errors.tender_name" />
-
-                                                    </div>
-                                                </div>
-                                                <label for="request_for"
-                                                    class="sm:col-span-2 col-span-12 col-form-label">Request For</label>
-                                                <div class="sm:col-span-10 col-span-12">
-                                                    <div class="input-group">
-                                                        <textarea v-model="selected.request_for" id="request_for"
-                                                            class="form-control"
-                                                            placeholder="Describe request"></textarea>
-                                                        <InputError class="mt-2"
-                                                            :message="$page.props.errors.request_for" />
-
-                                                    </div>
-                                                </div>
-                                                <label for="request_amount"
-                                                    class="sm:col-span-2 col-span-12 col-form-label">Amount</label>
-                                                <div class="sm:col-span-10 col-span-12">
-                                                    <div class="input-group">
-                                                        <TextInput v-model="selected.request_amount" type="number"
-                                                            min="0" id="request_amount" placeholder="Request Amount" />
-                                                        <InputError class="mt-2"
-                                                            :message="$page.props.errors.request_amount" />
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="ti-modal-footer">
-                                            <button type="button"
-                                                class="hs-dropdown-toggle ti-btn  ti-btn-secondary-full align-middle"
-                                                data-hs-overlay="#editModel">
-                                                Close
-                                            </button>
-
-                                            <PrimaryButton :class="{ 'opacity-25': form.processing }"
-                                                :disabled="form.processing">Save
-                                                Changes</PrimaryButton>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                            <i class="ri-add-line  align-middle"></i>New Tender
+                            </Link>
                         </div>
                         <div v-if="showDeleteModal" id="deleteModel" class="hs-overlay hidden ti-modal">
                             <div
@@ -478,62 +130,6 @@ defineProps({
                                 </div>
                             </div>
                         </div>
-                        <div v-if="viewTenderModel" id="viewTender" class="hs-overlay hidden ti-modal">
-                            <div class="hs-overlay-open:mt-7  ti-modal-box mt-0 ease-out">
-                                <div class="ti-modal-content">
-                                    <div class="ti-modal-header">
-                                        <h6 class="modal-title text-[1rem] font-semibold">Tender Details</h6>
-                                        <button type="button"
-                                            class="hs-dropdown-toggle !text-[1rem] !font-semibold !text-defaulttextcolor"
-                                            data-hs-overlay="#viewTender">
-                                            <span class="sr-only">Close</span>
-                                            <i class="ri-close-line"></i>
-                                        </button>
-                                    </div>
-                                    <div class="ti-modal-body">
-
-                                        <div class="grid grid-cols-12 gap-4 px-3">
-                                            <div class="xl:col-span-12 col-span-12">
-                                                <label for="name" class="form-label">Tender Name</label>
-                                                <TextInput disabled v-model="selectedTender.tender_name" type="text"
-                                                    id="name" />
-                                            </div>
-                                            <div class="xl:col-span-12 col-span-12">
-                                                <label for="request_amount" class="form-label">Request Amount</label>
-                                                <TextInput readonly v-model="selectedTender.request_amount" type="text"
-                                                    id="request_amount" />
-                                            </div>
-                                            <div class="xl:col-span-12 col-span-12">
-                                                <label for="request_for" class="form-label">Request For</label>
-                                                <TextInput readonly v-model="selectedTender.request_for" type="text"
-                                                    id="request_for" />
-                                            </div>
-
-                                            <div class="xl:col-span-6 col-span-12">
-                                                <label for="sold_amount" class="form-label">Sold Amount</label>
-                                                <TextInput readonly type="number" v-model="selectedTender.sold_amount"
-                                                    id="selling_price" required />
-
-                                            </div>
-                                            <div class="xl:col-span-6 col-span-12">
-                                                <label for="sales_amount" class="form-label">Sales Amount</label>
-                                                <TextInput readonly type="number" v-model="selectedTender.sales_amount"
-                                                    id="sales_amount" required />
-                                            </div>
-                                            <div class="xl:col-span-12 col-span-12">
-                                                <label for="description" class="form-label">Description</label>
-                                                <textarea readonly v-model="selectedTender.description"
-                                                    class="form-control w-full !rounded-md" id="description"
-                                                    rows="2"></textarea>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
 
                     </div>
                     <div class="box-body !p-0">
@@ -548,7 +144,7 @@ defineProps({
                                         <th scope="col" class="text-start">Bid Security</th>
                                         <th scope="col" class="text-start">Opening Date</th>
                                         <th scope="col" class="text-start">Submitted Date</th>
-                                        <th scope="col" class="text-start">Status</th>
+                                        <th scope="col" class="text-start"  >Status</th>
                                         <th scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
@@ -565,7 +161,21 @@ defineProps({
                                         <td><span :class="status[tender.status].class">{{
                                             status[tender.status].title }}</span></td>
                                         </td>
-                                        <td> Edit
+                                        <td>
+                                            <Link :href="route('tenders.show',tender.id)" class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
+                                                <i class="ri-eye-line"></i>
+                                            </Link>
+                                            <Link v-if="tender.status == 'new'" :href="route('tenders.edit', tender.id)"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-1">
+                                            <i class="ri-edit-line"></i>
+                                            </Link>
+                                            <a v-if="tender.status == 'new'" aria-label="anchor"
+                                                data-hs-overlay="#deleteModel" @click="deleteModel(tender.id)"
+                                                href="javascript:void(0);"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </a>
+
                                         </td>
                                     </tr>
 

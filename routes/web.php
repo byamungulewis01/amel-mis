@@ -56,9 +56,16 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('/tenders', TenderController::class);
+    Route::get('/tenders-new', [TenderController::class, 'new_tenders'])->name('tenders.new');
     Route::get('/tenders-list', [TenderController::class, 'tenders'])->name('tenders.list');
+    Route::post('/tender-cashRequest/{tender}', [TenderController::class, 'cashRequest'])->name('tender.cashRequest');
+    Route::put('/tender-cashRequest/{id}', [TenderController::class, 'cashRequestUpdate'])->name('tender.cashRequestUpdate');
+    Route::delete('/tender-cashRequest/{id}', [TenderController::class, 'cashRequestDelete'])->name('tender.cashRequestDelete');
     Route::put('/tenders/approve/{id}', [TenderController::class, 'approve'])->name('tenders.approve');
     Route::put('/tenders/closing/{id}', [TenderController::class, 'closing'])->name('tenders.closing');
+
+
+
     Route::resource('/weekly-reports', WeeklyReportController::class);
     Route::get('/weekly-reports-list', [WeeklyReportController::class,'reports_list'])->name('weekly_reports.list');;
     Route::put('/weekly-reports/approve/{id}', [WeeklyReportController::class,'approve'])->name('weekly_reports.approve');;

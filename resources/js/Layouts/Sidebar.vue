@@ -59,12 +59,16 @@ import NavLink from '@/Components/NavLink.vue';
 
                     </div>
                     <div v-if="$page.props.auth.user.department == 'field'">
+                        <li class="slide__category"><span class="category-name">Tenders</span></li>
                         <li class="slide">
-                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index')">
+                            <NavLink :href="route('tenders.new')" :active="route().current('tenders.new') || route().current('tenders.show')">
                                 <i class="bx bx-task side-menu__icon"></i>
-                                <span class="side-menu__label">Tenders</span>
+                                <span class="side-menu__label">Tenders<span class="text-secondary text-[0.75em] rounded-sm badge !py-[0.25rem] !px-[0.45rem] !bg-secondary/10 ms-2">New</span></span>
                             </NavLink>
                         </li>
+
+                        <li class="slide__category"><span class="category-name">Reports & Goals</span></li>
+
                         <li class="slide">
                             <NavLink :href="route('weekly-reports.index')"
                                 :active="route().current('weekly-reports.index') || route().current('weekly-reports.create') || route().current('weekly-reports.edit')">
@@ -91,7 +95,7 @@ import NavLink from '@/Components/NavLink.vue';
                             </NavLink>
                         </li>
                         <li class="slide">
-                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index')">
+                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index') || route().current('tenders.create') || route().current('tenders.edit') || route().current('tenders.show')">
                                 <i class="bx bx-task side-menu__icon"></i>
                                 <span class="side-menu__label">Tenders</span>
                             </NavLink>

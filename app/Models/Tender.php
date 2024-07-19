@@ -18,7 +18,6 @@ class Tender extends Model
         'submitted_date',
         'documents',
         'status',
-        'description',
         'sales_amount',
         'explainations',
         'stored_by',
@@ -29,4 +28,7 @@ class Tender extends Model
     {
         return $this->belongsTo(User::class, 'stored_by');
     }
+    protected $casts = [
+        'documents' => 'array', // Cast documents as array
+    ];
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CashRequest extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory, HasUuids;
     protected $fillable = [
         'tender_id',
         'request_amount',
@@ -18,6 +18,20 @@ class CashRequest extends Model
         'status',
         'description',
         'stored_by',
-        'approved_by',
+        'approvedOrRejected_by',
+        'approveOrRejectDate',
+        'comment',
+        'isMoneyRecieved',
+        'moneySentby',
+        'moneyRecievedDate',
+        'attachedDocument',
     ];
+    public function tender()
+    {
+        return $this->belongsTo(Tender::class,);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'stored_by');
+    }
 }
