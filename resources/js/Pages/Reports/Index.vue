@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-import { Head, Link ,useForm  } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const status = {
     sent: {
@@ -113,25 +113,30 @@ defineProps({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(reportKey, index) in Object.keys(reports)" :key="index"
+                                    <tr v-for="(report, index) in reports" :key="index"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>{{ index + 1 }}</td>
-                                        <td><span class="font-bold">Week {{ reports[reportKey].week_number }}
+                                        <td><span class="font-bold">Week {{ report.week_number }}
                                                 Report</span></td>
-                                        <td><i class="bi bi-clock me-1"></i>{{ reports[reportKey].date_from }}</td>
-                                        <td><i class="bi bi-clock me-1"></i>{{ reports[reportKey].date_to }}</td>
-                                        <td>{{ reports[reportKey].used_money.toLocaleString() }}</td>
-                                        <td><span :class="status[reports[reportKey].status].class">{{
-                                            status[reports[reportKey].status].title }}</span></td>
+                                        <td><i class="bi bi-clock me-1"></i>{{ report.date_from }}</td>
+                                        <td><i class="bi bi-clock me-1"></i>{{ report.date_to }}</td>
+                                        <td>{{ report.used_money.toLocaleString() }}</td>
+                                        <td><span :class="status[report.status].class">{{
+                                            status[report.status].title }}</span></td>
 
                                         <td>
-
-                                            <Link v-if="reports[reportKey].status == 'sent'" aria-label="anchor"
-                                                :href="route('weekly-reports.edit', reports[reportKey].id)"
+                                            <Link aria-label="anchor"
+                                                :href="route('weekly-reports.show', report.id)"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-success me-1">
+                                            <i class="ri-eye-line"></i>
+                                            </Link>
+                                            <Link v-if="report.status == 'sent'" aria-label="anchor"
+                                                :href="route('weekly-reports.edit', report.id)"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-1">
                                             <i class="ri-edit-line"></i>
                                             </Link>
-                                            <a v-if="reports[reportKey].status == 'sent'" @click="deleteModel(reports[reportKey].id)"  aria-label="anchor" data-hs-overlay="#deleteModel"
+                                            <a v-if="report.status == 'sent'" @click="deleteModel(report.id)"
+                                                aria-label="anchor" data-hs-overlay="#deleteModel"
                                                 href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                 <i class="ri-delete-bin-line"></i>
@@ -189,7 +194,8 @@ defineProps({
                                 <div class="mt-4">
                                     <button type="button" data-hs-overlay="#deleteModel"
                                         class="ti-btn !py-1 !px-2 !text-[0.75rem] !font-medium ti-btn-outline-secondary m-1">Back</button>
-                                    <button class="ti-btn !py-1 !px-2 !text-[0.75rem] !font-medium bg-warning text-white m-1">Continue</button>
+                                    <button
+                                        class="ti-btn !py-1 !px-2 !text-[0.75rem] !font-medium bg-warning text-white m-1">Continue</button>
                                 </div>
                             </div>
                         </form>

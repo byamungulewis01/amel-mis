@@ -1,19 +1,38 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { ref } from 'vue';
 
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import InputError from '@/Components/InputError.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { Inertia } from "@inertiajs/inertia";
 
+const status = {
+    requested: {
+        title: "Requested",
+        class: "badge bg-outline-secondary"
+    },
+    approved: {
+        title: "Approved",
+        class: "badge bg-outline-primary"
+    },
+    rejected: {
+        title: "Rejected",
+        class: "badge bg-outline-success"
+    },
+};
 
 defineProps({
-    tenders: Object,
+    cashrequests: Object,
 });
 </script>
 
 
 <template>
 
-    <Head title="Tenders" />
+    <Head title="Cash Requests" />
 
     <AuthenticatedLayout>
         <!-- Page Header -->
@@ -46,10 +65,8 @@ defineProps({
                 <div class="box  overflow-hidden">
                     <div class="box-header justify-between">
                         <div class="box-title">
-                            All Tenders List
+                            All Cash Requests
                         </div>
-
-
                     </div>
                     <div class="box-body !p-0">
                         <div class="table-responsive">
@@ -59,27 +76,52 @@ defineProps({
                                     <tr>
                                         <th scope="col" class="text-start">#</th>
                                         <th scope="col" class="text-start">Tender Name</th>
-                                        <th scope="col" class="text-start">Tender fees</th>
-                                        <th scope="col" class="text-start">Bid Security</th>
-                                        <th scope="col" class="text-start">Opening Date</th>
-                                        <th scope="col" class="text-start">Submitted Date</th>
-                                        <th scope="col" class="text-start"></th>
+                                        <th scope="col" class="text-start">Attachements</th>
+                                        <th scope="col" class="text-start">Amount</th>
+                                        <th scope="col" class="text-start">Status</th>
+                                        <th scope="col" class="text-start">Date</th>
+                                        <th scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(tender, index) in tenders" :key="tender.id"
+                                    <tr v-for="(cashrequest, index) in cashrequests.data" :key="cashrequest.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ tender.tender_name }}</td>
-                                        <td>{{ tender.tender_fees.toLocaleString() }}</td>
-                                        <td>{{ tender.bid_security.toLocaleString() }}</td>
-                                        <td>{{ tender.opening_date }}</td>
-                                        <td>{{ tender.submitted_date }}</td>
-
+                                        <td>{{ cashrequest.tender_name }}</td>
                                         <td>
-                                            <Link :href="route('tenders.show',tender.id)" class="ti-btn ti-btn-primary me-1">
-                                            More Details
+                                            <a :href="'/storage/' + cashrequest.purchase_order_file" target="_blank"
+                                                class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-primary-full btn-wave me-2">
+                                                <i class="ri-download-2-line align-middle inline-block"></i>Purchase
+                                                Order
+
+                                            </a>
+
+
+                                            <a :href="'/storage/' + cashrequest.estimated_badge_file" target="_blank"
+                                                class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-success btn-wave">
+                                                <i class="ri-download-2-line align-middle inline-block"></i>Estimate
+                                                Badget
+
+                                            </a>
+                                        </td>
+                                        <td>{{ cashrequest.request_amount.toLocaleString() }}</td>
+                                        <td><span :class="status[cashrequest.status].class">{{
+                                            status[cashrequest.status].title }}</span></td>
+
+
+                                        <td><i class="bi bi-clock me-1"></i>
+                                            {{ new
+                                                Date(cashrequest.created_at).toLocaleDateString('en-US', {
+                                                    month: 'short', day:
+                                                        '2-digit', year: 'numeric'
+                                                }) }}
+                                        </td>
+                                        <td>
+                                            <Link :href="route('tenders.show', cashrequest.tender_id)"
+                                                class="ti-btn ti-btn-primary me-1">
+                                            <i class="ri-eye-line"></i> view
                                             </Link>
+
                                         </td>
                                     </tr>
 

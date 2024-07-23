@@ -19,4 +19,8 @@ class Contract extends Model
         'type',
         'stored_by',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'stored_by');
+    }
 }

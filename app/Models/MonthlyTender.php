@@ -6,15 +6,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WeeklyReportDetail extends Model
+class MonthlyTender extends Model
 {
     use HasFactory, HasUuids;
-    protected $fillable = [
-        'weekly_report_id',
-        'date',
-        'day_name',
-        'activities',
-        'comment',
-        'hours',
-    ];
+    protected $fillable = ['month', 'status','user_id'];
 }

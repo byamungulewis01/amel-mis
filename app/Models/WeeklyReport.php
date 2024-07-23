@@ -19,7 +19,9 @@ class WeeklyReport extends Model
         'accommodation',
         'status',
         'stored_by',
-        'approved_by',
+        'approvedOrRejected_by',
+        'approveOrRejectDate',
+        'comment',
     ];
     public function details()
     {

@@ -10,19 +10,16 @@ class Tender extends Model
 {
     use HasFactory, HasUuids;
     protected $fillable = [
+        'monthly_tender_id',
         'tender_name',
         'bid_security',
         'tender_fees',
+        'other_fees',
         'description',
         'opening_date',
-        'submitted_date',
         'documents',
-        'status',
-        'sales_amount',
         'explainations',
         'stored_by',
-        'approved_by',
-        'closed_by',
     ];
     public function user()
     {

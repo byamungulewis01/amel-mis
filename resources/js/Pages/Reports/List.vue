@@ -107,22 +107,28 @@ defineProps({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(reportKey, index) in Object.keys(reports)" :key="index"
+                                    <tr v-for="(report, index) in reports" :key="index"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>{{ index + 1 }}</td>
-                                        <td><span class="font-bold">{{ reports[reportKey].user.name }}</span></td>
-                                        <td>Week {{ reports[reportKey].week_number }} Report</td>
-                                        <td><i class="bi bi-clock me-1"></i>{{ reports[reportKey].date_from }}</td>
-                                        <td><i class="bi bi-clock me-1"></i>{{ reports[reportKey].date_to }}</td>
-                                        <td>{{ reports[reportKey].used_money.toLocaleString() }}</td>
-                                        <td><span :class="status[reports[reportKey].status].class">{{
-                                            status[reports[reportKey].status].title }}</span></td>
+                                        <td><span class="font-bold">{{ report.user.name }}</span></td>
+                                        <td>Week {{ report.week_number }} Report</td>
+                                        <td><i class="bi bi-clock me-1"></i>{{ report.date_from }}</td>
+                                        <td><i class="bi bi-clock me-1"></i>{{ report.date_to }}</td>
+                                        <td>{{ report.used_money.toLocaleString() }}</td>
+                                        <td><span :class="status[report.status].class">{{
+                                            status[report.status].title }}</span></td>
 
                                         <td>
-                                            <button v-if="reports[reportKey].status == 'sent'"
-                                                @click="reportInstance(reports[reportKey].id)"
-                                                data-hs-overlay="#approveModel" type="button"
-                                                class="ti-btn ti-btn-warning-full !py-1 !px-2 !text-[0.75rem]">Approve</button>
+
+                                            <Link title="View" aria-label="anchor" :href="route('weekly-reports.show', report.id)"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
+                                            <i class="ri-eye-line"></i>
+                                            </Link>
+                                            <button title="Approve" v-if="report.status == 'sent'" @click="reportInstance(report.id)"
+                                            data-hs-overlay="#approveModel" type="button" :href="route('weekly-reports.show', report.id)"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-success me-1">
+                                            <i class="ri-check-line"></i>
+                                            </button>
 
                                         </td>
                                     </tr>

@@ -171,7 +171,7 @@ defineProps({
                         </div>
 
                         <div id="addModel" class="hs-overlay hidden ti-modal">
-                            <div class="hs-overlay-open:mt-7  ti-modal-box mt-0 ease-out">
+                            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
                                 <div class="ti-modal-content">
                                     <div class="ti-modal-header">
                                         <h6 class="modal-title text-[1rem] font-semibold">New Contract</h6>
@@ -240,7 +240,7 @@ defineProps({
                                                 </div>
                                                 <div class="xl:col-span-12 col-span-12">
                                                     <label for="description" class="form-label">Description</label>
-                                                    <textarea placeholder="Contract Description"
+                                                    <textarea placeholder="Contract Description" rows="5"
                                                         v-model="form.description"
                                                         class="form-control w-full !rounded-md"
                                                         id="description"></textarea>
@@ -268,7 +268,7 @@ defineProps({
                         </div>
 
                         <div v-if="showUpdateModal" id="editModel" class="hs-overlay hidden ti-modal">
-                            <div class="hs-overlay-open:mt-7  ti-modal-box mt-0 ease-out">
+                            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
                                 <div class="ti-modal-content">
                                     <div class="ti-modal-header">
                                         <h6 class="modal-title text-[1rem] font-semibold">Edit Contract</h6>
@@ -336,7 +336,7 @@ defineProps({
                                                 </div>
                                                 <div class="xl:col-span-12 col-span-12">
                                                     <label for="description" class="form-label">Description</label>
-                                                    <textarea placeholder="Contract Description"
+                                                    <textarea placeholder="Contract Description" rows="5"
                                                         v-model="selectedContract.description"
                                                         class="form-control w-full !rounded-md"
                                                         id="description"></textarea>

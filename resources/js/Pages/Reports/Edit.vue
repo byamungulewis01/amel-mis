@@ -2,26 +2,27 @@
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 // import { Inertia } from "@inertiajs/inertia";
 const props = defineProps({
     report: Object,
+    dates: Object,
+    activities: Object,
+    comments: Object,
+    hours: Object,
 });
 
-const details = props.report.details;
-
 const form = useForm({
-    date: details,
-    hours: details.hours,
-    activities: details.activities,
-    comment: details.comment,
+    date: props.dates,
+    hours: props.hours,
+    activities: props.activities,
+    comment: props.comments,
     used_money: props.report.used_money,
     transport: props.report.transport,
     accommodation: props.report.accommodation,
 });
 
-console.log(details);
 
 const submit = () => {
     form.put(route('weekly-reports.update', props.report.id),
@@ -84,13 +85,13 @@ const submit = () => {
                                             <div class="grid grid-cols-12 gap-5">
                                                 <div class="xl:col-span-3 col-span-12">
                                                     <div class="mb-2">
-                                                        <label for="date" class="form-label">Day/date (<span class="text-warning"></span>)</label>
-                                                        <input readonly type="date" v-model="form.date"
+                                                        <label for="date" class="form-label">Day/date  (<span class="text-warning">{{ form.date[n - 1].day_name }}</span>)</label>
+                                                        <input readonly type="date" v-model="form.date[n - 1].date"
                                                             class="form-control w-full !rounded-md" id="date">
                                                     </div>
                                                     <div>
                                                         <label for="hours" class="form-label">Hours</label>
-                                                        <input type="number" v-model="form.hours" min="0" max="24"
+                                                        <input type="number" v-model="form.hours[n - 1].hours" min="0" max="24"
                                                             class="form-control w-full !rounded-md" id="hours"
                                                             placeholder="1 Hour">
                                                     </div>
@@ -99,14 +100,14 @@ const submit = () => {
                                                 <div class="xl:col-span-5 col-span-12">
                                                     <label for="activities" class="form-label">Performed
                                                         Work</label>
-                                                    <textarea v-model="form.activities"
+                                                    <textarea v-model="form.activities[n - 1].activities"
                                                         class="form-control w-full !rounded-md" id="activities" rows="4"
                                                         placeholder="Brief description of work performed"></textarea>
 
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="comment" class="form-label">Comment</label>
-                                                    <textarea v-model="form.comment"
+                                                    <textarea v-model="form.comment[n - 1].comment"
                                                         class="form-control w-full !rounded-md" id="comment" rows="2"
                                                         placeholder="Comment here"></textarea>
                                                 </div>
@@ -140,7 +141,7 @@ const submit = () => {
                             <div
                                 class="px-6 py-4 border-t border-dashed dark:border-defaultborder/10 sm:flex justify-end">
                                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                                    class="ti-btn ti-btn-success !font-medium m-1">Submit Report</PrimaryButton>
+                                    class="ti-btn ti-btn-success !font-medium m-1">Save Changes</PrimaryButton>
 
                             </div>
                         </form>

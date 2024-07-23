@@ -13,18 +13,15 @@ return new class extends Migration
     {
         Schema::create('tenders', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('monthly_tender_id')->constrained()->onDelete('restrict');
             $table->string('tender_name');
-            $table->bigInteger('bid_security');
             $table->bigInteger('tender_fees');
+            $table->bigInteger('bid_security')->default(0);
+            $table->bigInteger('other_fees')->default(0);
             $table->text('description');
             $table->date('opening_date');
-            $table->date('submitted_date');
             $table->json('documents')->nullable();
-            $table->enum('status',['new','won','lost'])->default('new');
-            $table->bigInteger('sales_amount')->nullable();
-            $table->text('explainations')->nullable();
             $table->foreignUuid('stored_by')->constrained('users')->onDelete('restrict');
-            $table->foreignUuid('closed_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

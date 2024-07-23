@@ -43,7 +43,7 @@ const submit = () => {
             <div class="box-body !p-[3rem]">
                 <p class="h5 font-semibold mb-2 text-center">Sign In</p>
                 <p class="mb-4 text-[#8c9097] dark:text-white/50 opacity-[0.7] font-normal text-center">
-                    Welcome back to our App !</p>
+                    Welcome back to our App  !</p>
                 <form @submit.prevent="submit">
                     <div class="grid grid-cols-12 gap-y-4">
                         <div class="xl:col-span-12 col-span-12">

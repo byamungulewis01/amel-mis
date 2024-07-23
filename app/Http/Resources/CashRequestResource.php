@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tender;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,6 +19,7 @@ class CashRequestResource extends JsonResource
         return [
             'id' => $this->id,
             'tender_id' => $this->tender_id,
+            'tender_name' => Tender::find($this->tender_id)->tender_name,
             'request_amount' => (int) $this->request_amount,
             'request_for' => $this->request_for,
             'purchase_order_file' => $this->purchase_order_file,

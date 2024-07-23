@@ -10,13 +10,12 @@ class CashRequest extends Model
 {
     use HasFactory, HasUuids;
     protected $fillable = [
-        'tender_id',
+        'contract_id',
         'request_amount',
         'request_for',
         'purchase_order_file',
         'estimated_badge_file',
         'status',
-        'description',
         'stored_by',
         'approvedOrRejected_by',
         'approveOrRejectDate',
@@ -24,11 +23,10 @@ class CashRequest extends Model
         'isMoneyRecieved',
         'moneySentby',
         'moneyRecievedDate',
-        'attachedDocument',
     ];
-    public function tender()
+    public function contact()
     {
-        return $this->belongsTo(Tender::class,);
+        return $this->belongsTo(Contract::class,);
     }
     public function user()
     {

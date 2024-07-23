@@ -9,7 +9,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\CashRequestController;
 use App\Http\Controllers\WeeklyReportController;
+use App\Http\Controllers\MonthlyTendersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,12 +50,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/contracts', 'store')->name('store')->middleware('user-access:procurement');
         Route::put('/contracts/{id}', 'update')->name('update')->middleware('user-access:procurement');
         Route::delete('/contracts/{id}', 'destroy')->name('destroy')->middleware('user-access:procurement');
+
+        Route::get('/active-contracts', 'activeContracts')->name('activeContracts');
+        Route::get('/contracts/{id}', 'show')->name('show');
+
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::controller(MonthlyTendersController::class)->prefix('monthly-tenders')->name('monthly-tenders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'destroy')->name('destroy');
+    });
 
     Route::resource('/tenders', TenderController::class);
     Route::get('/tenders-new', [TenderController::class, 'new_tenders'])->name('tenders.new');
@@ -64,11 +76,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/tenders/approve/{id}', [TenderController::class, 'approve'])->name('tenders.approve');
     Route::put('/tenders/closing/{id}', [TenderController::class, 'closing'])->name('tenders.closing');
 
+    Route::controller(CashRequestController::class)->prefix('cash-request')->name('cashRequest.')->group(function () {
+        Route::get('/field', 'fieldRequests')->name('field');
+    });
+
+
 
 
     Route::resource('/weekly-reports', WeeklyReportController::class);
-    Route::get('/weekly-reports-list', [WeeklyReportController::class,'reports_list'])->name('weekly_reports.list');;
-    Route::put('/weekly-reports/approve/{id}', [WeeklyReportController::class,'approve'])->name('weekly_reports.approve');;
+    Route::get('/weekly-reports-list', [WeeklyReportController::class, 'reports_list'])->name('weekly_reports.list');;
+    Route::put('/weekly-reports/approve/{id}', [WeeklyReportController::class, 'approve'])->name('weekly_reports.approve');;
 });
 
 require __DIR__ . '/auth.php';

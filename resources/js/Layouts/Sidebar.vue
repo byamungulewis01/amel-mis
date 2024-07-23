@@ -51,7 +51,7 @@ import NavLink from '@/Components/NavLink.vue';
                         </li>
                         <li class="slide">
                             <NavLink :href="route('weekly_reports.list')"
-                                :active="route().current('weekly_reports.list')">
+                                :active="route().current('weekly_reports.list') || route().current('weekly-reports.show')">
                                 <i class="bx bx-book side-menu__icon"></i>
                                 <span class="side-menu__label">Reports</span>
                             </NavLink>
@@ -61,9 +61,15 @@ import NavLink from '@/Components/NavLink.vue';
                     <div v-if="$page.props.auth.user.department == 'field'">
                         <li class="slide__category"><span class="category-name">Tenders</span></li>
                         <li class="slide">
-                            <NavLink :href="route('tenders.new')" :active="route().current('tenders.new') || route().current('tenders.show')">
+                            <NavLink :href="route('contract.activeContracts')" :active="route().current('contract.activeContracts')">
                                 <i class="bx bx-task side-menu__icon"></i>
                                 <span class="side-menu__label">Tenders<span class="text-secondary text-[0.75em] rounded-sm badge !py-[0.25rem] !px-[0.45rem] !bg-secondary/10 ms-2">New</span></span>
+                            </NavLink>
+                        </li>
+                        <li class="slide">
+                            <NavLink :href="route('cashRequest.field')" :active="route().current('cashRequest.field')">
+                                <i class="bx bx-bar-chart-square side-menu__icon"></i>
+                                <span class="side-menu__label">Cash Requests</span>
                             </NavLink>
                         </li>
 
@@ -71,7 +77,7 @@ import NavLink from '@/Components/NavLink.vue';
 
                         <li class="slide">
                             <NavLink :href="route('weekly-reports.index')"
-                                :active="route().current('weekly-reports.index') || route().current('weekly-reports.create') || route().current('weekly-reports.edit')">
+                                :active="route().current('weekly-reports.index') || route().current('weekly-reports.create') || route().current('weekly-reports.edit') || route().current('weekly-reports.show')">
                                 <i class="bx bx-book side-menu__icon"></i>
                                 <span class="side-menu__label">Reports</span>
                             </NavLink>
@@ -95,7 +101,7 @@ import NavLink from '@/Components/NavLink.vue';
                             </NavLink>
                         </li>
                         <li class="slide">
-                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index') || route().current('tenders.create') || route().current('tenders.edit') || route().current('tenders.show')">
+                            <NavLink :href="route('monthly-tenders.index')" :active="route().current('monthly-tenders.index') || route().current('tenders.index') || route().current('tenders.create') || route().current('tenders.edit') || route().current('tenders.show')">
                                 <i class="bx bx-task side-menu__icon"></i>
                                 <span class="side-menu__label">Tenders</span>
                             </NavLink>

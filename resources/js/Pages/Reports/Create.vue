@@ -2,11 +2,14 @@
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
+const props = defineProps({
+    week_dates: Object,
+});
 
 // import { Inertia } from "@inertiajs/inertia";
 const form = useForm({
-    date: [],
+    date: props.week_dates,
     hours: [],
     activities: [],
     comment: [],
@@ -14,6 +17,7 @@ const form = useForm({
     transport: '',
     accommodation: '',
 });
+
 
 const submit = () => {
     form.post(route('weekly-reports.store'),
@@ -29,9 +33,6 @@ const submit = () => {
         }
     );
 };
-defineProps({
-    week_dates: Object,
-});
 
 </script>
 
@@ -78,14 +79,16 @@ defineProps({
                                             <div class="grid grid-cols-12 gap-5">
                                                 <div class="xl:col-span-3 col-span-12">
                                                     <div class="mb-2">
-                                                        <label for="date" class="form-label">Day/date (<span class="text-warning">{{ week_dates[n].name }}</span>)</label>
+                                                        <label for="date" class="form-label">Day/date (<span
+                                                                class="text-warning">{{ week_dates[n].name
+                                                                }}</span>)</label>
                                                         <input readonly type="date" v-model="week_dates[n].date"
                                                             class="form-control w-full !rounded-md" id="date">
                                                     </div>
                                                     <div>
                                                         <label for="hours" class="form-label">Hours</label>
-                                                        <input type="number" v-model="form.hours[n - 1]" min="0" max="24"
-                                                            class="form-control w-full !rounded-md" id="hours"
+                                                        <input type="number" v-model="form.hours[n - 1]" min="0"
+                                                            max="24" class="form-control w-full !rounded-md" id="hours"
                                                             placeholder="1 Hour">
                                                     </div>
                                                 </div>

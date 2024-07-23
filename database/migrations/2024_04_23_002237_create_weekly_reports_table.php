@@ -22,7 +22,9 @@ return new class extends Migration
             $table->bigInteger('accommodation')->default(0);
             $table->enum('status',['sent','rejected','approved'])->default('sent');
             $table->foreignUuid('stored_by')->constrained('users')->onDelete('restrict');
-            $table->foreignUuid('approved_by')->nullable()->constrained('users')->onDelete('restrict');
+            $table->foreignUuid('approvedOrRejected_by')->nullable()->constrained('users')->onDelete('restrict');
+            $table->date('approveOrRejectDate')->nullable();
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }

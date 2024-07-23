@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('weekly_report_details', function (Blueprint $table) {
+        Schema::create('monthly_tenders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('weekly_report_id')->constrained('weekly_reports')->onDelete('cascade');
-            $table->date('date');
-            $table->string('day_name');
-            $table->string('activities');
-            $table->string('comment')->nullable();
-            $table->integer('hours');
+            $table->date('month');
+            $table->enum('status', ['active', 'terminated'])->default('active');
+            $table->foreignUuid('user_id')->constrained()->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('weekly_report_details');
+        Schema::dropIfExists('monthly_tenders');
     }
 };

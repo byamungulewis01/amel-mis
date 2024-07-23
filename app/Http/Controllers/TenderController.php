@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CashRequestResource;
-use App\Http\Resources\TenderResource;
 use Inertia\Inertia;
 use App\Models\Tender;
 use App\Models\CashRequest;
 use Illuminate\Http\Request;
+use App\Models\MonthlyTender;
+use App\Http\Resources\TenderResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Resources\CashRequestResource;
+use App\Http\Resources\MonthlyTenderResource;
 
 class TenderController extends Controller
 {
@@ -18,8 +20,10 @@ class TenderController extends Controller
      */
     public function index()
     {
-        $tenders = Tender::where('stored_by', auth()->user()->id)->orderByDesc('created_at')->get();
-        return Inertia::render('Tenders/Index', compact('tenders'));
+        $tenders = TenderResource::collection(Tender::where('stored_by', auth()->user()->id)->orderByDesc('created_at')->get());
+        $tender = new MonthlyTenderResource(MonthlyTender::findOrFail(request('id')));
+
+        return Inertia::render('Tenders/List', compact('tenders', 'tender'));
     }
     public function new_tenders()
     {
@@ -29,6 +33,7 @@ class TenderController extends Controller
     public function tenders()
     {
         $tenders = Tender::with('user')->orderByDesc('created_at')->get();
+        // dd($tenders);
         return Inertia::render('Tenders/Tenders', compact('tenders'));
     }
 
@@ -37,8 +42,8 @@ class TenderController extends Controller
      */
     public function create()
     {
-        //
-        return Inertia::render('Tenders/Create');
+        $tender_id = request('id');
+        return Inertia::render('Tenders/Create', compact('tender_id'));
     }
 
     /**
@@ -46,25 +51,28 @@ class TenderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'tender_name' => 'required',
             'bid_security' => 'required|numeric',
             'tender_fees' => 'required|numeric',
+            'other_fees' => 'required|numeric',
             'description' => 'required',
             'opening_date' => 'required',
-            'submitted_date' => 'required',
-            'bid_documents.*' => 'nullable|file|mimes:pdf,jpg,png,jpeg,xlsx,xls,doc,docx,ppt,pptx|max:5120',
+            'bid_documents' => 'required|array',
+            'bid_documents.*.name' => 'required|string',
+            'bid_documents.*.filePath' => 'required|mimes:pdf,jpg,png,jpeg,xlsx,xls,doc,docx,ppt,pptx|max:5120',
         ]);
+
         $documents = [];
-        if ($request->hasFile('bid_documents')) {
-            foreach ($request->file('bid_documents') as $key => $file) {
-                $documents[$key] = $file->store('tenderDocuments', 'public');
-            }
+        foreach ($request->bid_documents as $document) {
+            $documents[] = [
+                'name' => $document['name'],
+                'filePath' => $document['filePath']->store('tenderDocuments', 'public')
+            ];
         }
-
         try {
-
-            $request->merge(['stored_by' => auth()->user()->id, 'documents' => $documents]);
+            $request->merge(['stored_by' => auth()->user()->id, 'monthly_tender_id' => $request->tender_id, 'documents' => $documents]);
             Tender::create($request->all());
             //code...
         } catch (\Throwable $th) {
@@ -72,7 +80,7 @@ class TenderController extends Controller
             return back()->with('error', $th->getMessage());
         }
 
-        return to_route('tenders.index')->with('message', 'Tender created successfully');
+        return to_route('tenders.index', ['id' => $request->tender_id])->with('message', 'Tender created successfully');
     }
 
     /**
@@ -81,8 +89,7 @@ class TenderController extends Controller
     public function show(string $id)
     {
         $tender = new TenderResource(Tender::where('id', $id)->first());
-        $cashrequests =  CashRequestResource::collection(CashRequest::with('tender')->where('tender_id', $id)->orderByDesc('created_at')->get());
-        return Inertia::render('Tenders/Show', compact('tender', 'cashrequests'));
+        return Inertia::render('Tenders/Show', compact('tender'));
     }
 
     /**
@@ -114,6 +121,7 @@ class TenderController extends Controller
 
         if ($request->hasFile('bid_documents')) {
             foreach ($request->file('bid_documents') as $key => $file) {
+                Storage::delete($documents[$key]);
                 $documents[$key] = $file->store('tenderDocuments', 'public');
             }
         }
@@ -148,6 +156,9 @@ class TenderController extends Controller
         try {
             //code...
             $tender = Tender::where('id', $id)->first();
+            foreach ($tender->documents as $document) {
+                Storage::delete($document);
+            }
             $tender->delete();
         } catch (\Throwable $th) {
             //throw $th;
@@ -177,80 +188,4 @@ class TenderController extends Controller
         return Redirect::back()->with('message', 'Tender closed successfully.');
     }
 
-    public function cashRequest(Request $request, string $tenderId)
-    {
-        $request->validate([
-            'request_amount' => 'required|numeric',
-            'request_for' => 'required',
-            'description' => 'nullable',
-            'purchase_order' => 'required|max:100000',
-            'estimated_badge' => 'required|max:100000',
-        ]);
-        $lastRequest = CashRequest::where('tender_id', $tenderId)->where('status', 'requested')->first();
-        if ($lastRequest) {
-            return Redirect::back()->with('warning', 'You can\'t reqeuest more than one cash  at time');
-        }
-        if ($request->hasFile('purchase_order')) {
-            $purchase_order = $request->file('purchase_order')->store('upload_files', 'public');
-            $request->merge(['purchase_order_file' => $purchase_order]);
-        }
-        if ($request->hasFile('estimated_badge')) {
-            $estimated_badge = $request->file('estimated_badge')->store('upload_files', 'public');
-            $request->merge(['estimated_badge_file' => $estimated_badge]);
-        }
-
-        $request->merge(['stored_by' => auth()->user()->id, 'tender_id' => $tenderId]);
-        try {
-            CashRequest::create($request->all());
-        } catch (\Throwable $th) {
-            //throw $th;
-            return Redirect::back()->with('warning', $th->getMessage());
-        }
-        return Redirect::back()->with('message', 'Cash requested successfully');
-    }
-    public function cashRequestUpdate(Request $request, string $id)
-    {
-        $request->validate([
-            'request_amount' => 'required|numeric',
-            'request_for' => 'required',
-            'description' => 'nullable',
-            'purchase_order' => 'nullable|file|max:100000',
-            'estimated_badge' => 'nullable|file|max:100000',
-        ]);
-
-        $cashRequest = CashRequest::findOrFail($id);
-
-        if ($request->hasFile('purchase_order')) {
-            Storage::delete($cashRequest->purchase_order_file);
-            $purchase_order = $request->file('purchase_order')->store('upload_files', 'public');
-            $request->merge(['purchase_order_file' => $purchase_order]);
-        }
-
-        if ($request->hasFile('estimated_badge')) {
-            Storage::delete($cashRequest->estimated_badge_file);
-            $estimated_badge = $request->file('estimated_badge')->store('upload_files', 'public');
-            $request->merge(['estimated_badge_file' => $estimated_badge]);
-        }
-
-        try {
-            $cashRequest->update($request->all());
-        } catch (\Throwable $th) {
-            return Redirect::back()->with('warning', $th->getMessage());
-        }
-
-        return Redirect::back()->with('message', 'Cash request updated successfully');
-    }
-    public function cashRequestDelete(string $id)
-    {
-        try {
-            $cashRequest = CashRequest::findOrFail($id);
-            Storage::delete($cashRequest->purchase_order_file);
-            Storage::delete($cashRequest->estimated_badge_file);
-            $cashRequest->delete();
-        } catch (\Throwable $th) {
-            return Redirect::back()->with('warning', $th->getMessage());
-        }
-
-        return Redirect::back()->with('message', 'Cash request deleted successfully');
-    }
 }

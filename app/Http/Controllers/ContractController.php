@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Contract;
+use App\Models\CashRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Inertia\Inertia;
+use App\Http\Resources\CashRequestResource;
 
 class ContractController extends Controller
 {
@@ -14,6 +16,7 @@ class ContractController extends Controller
         $contracts = Contract::orderByDesc('created_at')->get();
         return Inertia::render('Contracts/Index', compact('contracts'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -55,6 +58,18 @@ class ContractController extends Controller
         $contract = Contract::where('id', $id)->first();
         $contract->delete();
         return Redirect::back()->with('message', 'Contract deleted successfully.');
+    }
+
+    public function activeContracts()
+    {
+        $contracts = Contract::where('status','active')->orderByDesc('created_at')->get();
+        return Inertia::render('Contracts/Active', compact('contracts'));
+    }
+    public function show(String $id)
+    {
+        $contract = Contract::with('user')->findOrFail($id);
+        $cashrequests =  CashRequestResource::collection(CashRequest::where('contract_id', $id)->orderByDesc('created_at')->get());
+        return Inertia::render('Contracts/Show', compact('contract','cashrequests'));
     }
 
 }

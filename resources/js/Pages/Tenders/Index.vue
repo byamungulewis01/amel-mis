@@ -1,9 +1,32 @@
 <script setup>
-import { ref } from 'vue';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+
+
+import { ref, onMounted } from 'vue';
+
+const currentMonth = ref('');
+const nextMonth = ref('');
+
+const getMonthNames = () => {
+    const now = new Date();
+    const currentMonthIndex = now.getMonth(); // Get current month index (0-11)
+    const nextMonthIndex = (currentMonthIndex + 1) % 12; // Get next month index (0-11)
+
+    // Use Intl.DateTimeFormat to get month names
+    const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long' });
+
+    currentMonth.value = monthFormatter.format(new Date(now.getFullYear(), currentMonthIndex));
+    nextMonth.value = monthFormatter.format(new Date(now.getFullYear(), nextMonthIndex));
+};
+
+onMounted(() => {
+    getMonthNames();
+});
+
 const status = {
     new: {
         title: "New",
@@ -18,6 +41,29 @@ const status = {
         class: "badge bg-outline-success"
     },
 };
+const form = useForm({
+    choice: 'currentMonth',
+});
+
+const submit = () => {
+    form.post(route('monthly-tenders.store'),
+        {
+            onSuccess: () => {
+                form.reset();
+                const closeButton = document.querySelector('.hs-dropdown-toggle[data-hs-overlay="#addModel"]');
+                if (closeButton) {
+                    closeButton.click();
+                }
+
+            },
+            onError: (errors) => {
+                console.log('error', errors);
+                // Handle error responses or validation errors
+            },
+        }
+    );
+};
+
 
 
 // delete user information
@@ -25,14 +71,14 @@ const showDeleteModal = ref(false);
 const selectedId = ref(null);
 
 
-const deleteModel = (user_id) => {
-    selectedId.value = user_id;
+const deleteModel = (id) => {
+    selectedId.value = id;
     showDeleteModal.value = true;
 };
-const destroyTender = (user_id) => {
+const destroyTender = (id) => {
     // Assuming selectedUser contains the data of the user being updated
     const form = useForm({});
-    form.delete(route('tenders.destroy', user_id), {
+    form.delete(route('monthly-tenders.destroy', id), {
         onSuccess: () => {
             const closeButton = document.querySelector('.ti-btn[data-hs-overlay="#deleteModel"]');
             if (closeButton) {
@@ -48,14 +94,14 @@ const destroyTender = (user_id) => {
 
 
 defineProps({
-    tenders: Object,
+    monthlyTenders: Object,
 });
 </script>
 
 
 <template>
 
-    <Head title="Tenders" />
+    <Head title="Monthly Tenders" />
 
     <AuthenticatedLayout>
         <!-- Page Header -->
@@ -91,11 +137,70 @@ defineProps({
                             All Tenders List
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <Link :href="route('tenders.create')"
+                            <button data-hs-overlay="#addModel"
                                 class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                            <i class="ri-add-line  align-middle"></i>New Tender
-                            </Link>
+                                <i class="ri-add-line  align-middle"></i>New
+                            </button>
                         </div>
+                        <div id="addModel" class="hs-overlay hidden ti-modal">
+                            <div class="hs-overlay-open:mt-7  ti-modal-box mt-0 ease-out">
+                                <div class="ti-modal-content">
+                                    <div class="ti-modal-header">
+                                        <h6 class="modal-title text-[1rem] font-semibold">Monthly Tenders</h6>
+                                        <button type="button"
+                                            class="ti-btn !text-[1rem] !font-semibold !text-defaulttextcolor"
+                                            data-hs-overlay="#addModel">
+                                            <span class="sr-only">Close</span>
+                                            <i class="ri-close-line"></i>
+                                        </button>
+                                    </div>
+                                    <form @submit.prevent="submit">
+                                        <div class="ti-modal-body">
+
+                                            <div class="grid grid-cols-12 gap-4 px-3">
+                                                <div class="xl:col-span-12 col-span-12">
+                                                    <label for="contract_number" class="form-label mb-5">Choose Month
+                                                    </label>
+                                                    <div class="flex gap-5 mt-3">
+
+                                                        <div class="form-check form-check-lg">
+                                                            <input class="form-check-input" v-model="form.choice"
+                                                                type="radio" value="currentMonth" id="currentMonth"
+                                                                checked>
+                                                            <label class="form-check-label" for="currentMonth">
+                                                                Current Month ({{ currentMonth }})
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-lg">
+                                                            <input class="form-check-input" v-model="form.choice"
+                                                                type="radio" value="nextMonth" id="nextMonth">
+                                                            <label class="form-check-label" for="nextMonth">
+                                                                Next Month ({{ nextMonth }})
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="ti-modal-footer">
+                                            <button type="button"
+                                                class="hs-dropdown-toggle ti-btn  ti-btn-secondary-full align-middle"
+                                                data-hs-overlay="#addModel">
+                                                Close
+                                            </button>
+                                            <PrimaryButton :class="{ 'opacity-25': form.processing }"
+                                                :disabled="form.processing">Submit</PrimaryButton>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                         <div v-if="showDeleteModal" id="deleteModel" class="hs-overlay hidden ti-modal">
                             <div
                                 class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out min-h-[calc(100%-3.5rem)] flex items-center">
@@ -139,39 +244,31 @@ defineProps({
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-start">#</th>
-                                        <th scope="col" class="text-start">Tender Name</th>
-                                        <th scope="col" class="text-start">Tender fees</th>
-                                        <th scope="col" class="text-start">Bid Security</th>
-                                        <th scope="col" class="text-start">Opening Date</th>
-                                        <th scope="col" class="text-start">Submitted Date</th>
-                                        <th scope="col" class="text-start"  >Status</th>
+                                        <th scope="col" class="text-start">Month</th>
+                                        <th scope="col" class="text-start">Number of tenders</th>
+                                        <th scope="col" class="text-start">Total Amount</th>
+                                        <th scope="col" class="text-start">Amount Used</th>
+                                        <th scope="col" class="text-start">Profit</th>
                                         <th scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(tender, index) in tenders" :key="tender.id"
+                                    <tr v-for="(tender, index) in monthlyTenders.data" :key="tender.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ tender.tender_name }}</td>
-                                        <td>{{ tender.tender_fees.toLocaleString() }}</td>
-                                        <td>{{ tender.bid_security.toLocaleString() }}</td>
-                                        <td>{{ tender.opening_date }}</td>
-                                        <td>{{ tender.submitted_date }}</td>
+                                        <td>{{ tender.month }}</td>
+                                        <td>{{ tender.numberOfTenders }}</td>
+                                        <td>{{ tender.totalAmount.toLocaleString() }}</td>
+                                        <td>{{ tender.amountUsed.toLocaleString() }}</td>
+                                        <td>{{ tender.profit }}</td>
                                         <td>
-                                        <td><span :class="status[tender.status].class">{{
-                                            status[tender.status].title }}</span></td>
-                                        </td>
-                                        <td>
-                                            <Link :href="route('tenders.show',tender.id)" class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
-                                                <i class="ri-eye-line"></i>
+                                            <Link :href="route('tenders.index', { id: tender.id })"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
+                                            <i class="ri-eye-line"></i>
                                             </Link>
-                                            <Link v-if="tender.status == 'new'" :href="route('tenders.edit', tender.id)"
-                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-1">
-                                            <i class="ri-edit-line"></i>
-                                            </Link>
-                                            <a v-if="tender.status == 'new'" aria-label="anchor"
-                                                data-hs-overlay="#deleteModel" @click="deleteModel(tender.id)"
-                                                href="javascript:void(0);"
+
+                                            <a aria-label="anchor" data-hs-overlay="#deleteModel"
+                                                @click="deleteModel(tender.id)" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                 <i class="ri-delete-bin-line"></i>
                                             </a>
