@@ -87,7 +87,7 @@ defineProps({
                                     <tr v-for="(cashrequest, index) in cashrequests.data" :key="cashrequest.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ cashrequest.tender_name }}</td>
+                                        <td>{{ cashrequest.name }}</td>
                                         <td>
                                             <a :href="'/storage/' + cashrequest.purchase_order_file" target="_blank"
                                                 class="ti-btn !py-1 !px-2 !text-[0.75rem] ti-btn-primary-full btn-wave me-2">
@@ -117,7 +117,7 @@ defineProps({
                                                 }) }}
                                         </td>
                                         <td>
-                                            <Link :href="route('tenders.show', cashrequest.tender_id)"
+                                            <Link :href="route('contract.show', cashrequest.contract_id)"
                                                 class="ti-btn ti-btn-primary me-1">
                                             <i class="ri-eye-line"></i> view
                                             </Link>

@@ -2,31 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
+use App\Http\Resources\CashRequestResource;
 use App\Models\CashRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Resources\CashRequestResource;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class CashRequestController extends Controller
 {
     //
     public function fieldRequests()
     {
-        $cashrequests =  CashRequestResource::collection(CashRequest::where('stored_by', auth()->id())->orderByDesc('created_at')->get());
+        $cashrequests = CashRequestResource::collection(CashRequest::where('stored_by', auth()->id())->orderByDesc('created_at')->get());
         return Inertia::render('CashRequest/Field', compact('cashrequests'));
     }
-    public function cashRequest(Request $request, string $tenderId)
+    public function managerRequests()
+    {
+        $cashrequests = CashRequestResource::collection(CashRequest::orderByDesc('created_at')->get());
+        return Inertia::render('CashRequest/Manager', compact('cashrequests'));
+    }
+    public function cashRequest(Request $request, string $contract)
     {
         $request->validate([
             'request_amount' => 'required|numeric',
             'request_for' => 'required',
-            'description' => 'nullable',
             'purchase_order' => 'required|max:100000',
             'estimated_badge' => 'required|max:100000',
         ]);
-        $lastRequest = CashRequest::where('tender_id', $tenderId)->where('status', 'requested')->first();
+        $lastRequest = CashRequest::where('contract_id', $contract)->where('status', 'requested')->first();
         if ($lastRequest) {
             return Redirect::back()->with('warning', 'You can\'t reqeuest more than one cash  at time');
         }
@@ -39,7 +43,7 @@ class CashRequestController extends Controller
             $request->merge(['estimated_badge_file' => $estimated_badge]);
         }
 
-        $request->merge(['stored_by' => auth()->user()->id, 'tender_id' => $tenderId]);
+        $request->merge(['stored_by' => auth()->id(), 'contract_id' => $contract]);
         try {
             CashRequest::create($request->all());
         } catch (\Throwable $th) {
@@ -53,7 +57,6 @@ class CashRequestController extends Controller
         $request->validate([
             'request_amount' => 'required|numeric',
             'request_for' => 'required',
-            'description' => 'nullable',
             'purchase_order' => 'nullable|file|max:100000',
             'estimated_badge' => 'nullable|file|max:100000',
         ]);
@@ -93,4 +96,44 @@ class CashRequestController extends Controller
 
         return Redirect::back()->with('message', 'Cash request deleted successfully');
     }
+
+    public function approve(Request $request, string $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+        CashRequest::findOrFail($id)->update(['status' => 'approved',
+            'approvedOrRejected_by' => auth()->id(),
+            'approveOrRejectDate' => now(),
+            'comment' => $request->comment,
+        ]);
+        return Redirect::back()->with('message', 'Cash Request approved.');
+    }
+    public function reject(Request $request, string $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+        CashRequest::findOrFail($id)->update(['status' => 'rejected',
+            'approvedOrRejected_by' => auth()->id(),
+            'approveOrRejectDate' => now(),
+            'comment' => $request->comment,
+        ]);
+        return Redirect::back()->with('message', 'Cash Request rejected.');
+    }
+    // public function closing(Request $request, string $id)
+    // {
+    //     $request->validate([
+    //         'sold_amount' => 'required|numeric',
+    //         'sales_amount' => 'required|numeric',
+    //         'description' => 'nullable|max:255',
+    //     ]);
+    //     $request->merge([
+    //         'status' => 'complete',
+    //         'closed_by' => auth()->user()->id,
+    //     ]);
+    //     $tender = Tender::where('id', $id)->first();
+    //     $tender->update($request->all());
+    //     return Redirect::back()->with('message', 'Tender closed successfully.');
+    // }
 }

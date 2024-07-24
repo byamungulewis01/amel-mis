@@ -35,7 +35,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('tender.cashRequest', contract.id),
+    form.post(route('cashRequest.store', props.contract.id),
         {
             onSuccess: () => {
                 form.reset();
@@ -72,7 +72,7 @@ const updateTender = () => {
         estimated_badge: selected.value?.estimated_badge
     });
 
-    Inertia.post(route('tender.cashRequestUpdate', selected.value.id), {
+    Inertia.post(route('cashRequest.update', selected.value.id), {
         _method: "put",
         tender_name: form.tender_name,
         request_amount: form.request_amount,
@@ -95,7 +95,7 @@ const deleteModel = (tenderId) => {
 const destroyTender = (tenderId) => {
     // Assuming selectedUser contains the data of the user being updated
     const form = useForm({});
-    form.delete(route('tender.cashRequestDelete', tenderId), {
+    form.delete(route('cashRequest.destroy', tenderId), {
         onSuccess: () => {
             const closeButton = document.querySelector('.ti-btn[data-hs-overlay="#deleteModel"]');
             if (closeButton) {
@@ -172,7 +172,7 @@ const viewTender = (tender) => {
                                         <th scope="col" class="text-start">Amount</th>
                                         <th scope="col" class="text-start">Status</th>
                                         <th scope="col" class="text-start">Date</th>
-                                        <th scope="col" class="text-start">Action</th>
+                                        <th  v-if="$page.props.auth.user.department == 'field'" scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -207,7 +207,7 @@ const viewTender = (tender) => {
                                                         '2-digit', year: 'numeric'
                                                 }) }}
                                         </td>
-                                        <td>
+                                        <td  v-if="$page.props.auth.user.department == 'field'">
 
                                             <div v-if="cashrequest.status == 'requested'">
 
@@ -222,11 +222,11 @@ const viewTender = (tender) => {
                                                     <i class="ri-delete-bin-line"></i>
                                                 </a>
                                             </div>
-                                            <a v-else @click="viewTender(cashrequest)" data-hs-overlay="#viewTender"
+                                            <!-- <a v-else @click="viewTender(cashrequest)" data-hs-overlay="#viewTender"
                                                 aria-label="anchor" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-primary me-1">
                                                 <i class="ri-eye-line"></i> view
-                                            </a>
+                                            </a> -->
 
                                         </td>
                                     </tr>

@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Inertia } from "@inertiajs/inertia";
@@ -163,7 +163,7 @@ defineProps({
                         <div class="box-title">
                             All Contract List
                         </div>
-                        <div class="flex flex-wrap gap-2">
+                        <div v-if="$page.props.auth.user.department == 'procurement'" class="flex flex-wrap gap-2">
                             <button data-hs-overlay="#addModel"
                                 class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
                                 <i class="ri-add-line  align-middle"></i>New Contract
@@ -426,6 +426,11 @@ defineProps({
                                             status[contract.status].title }}</span></td>
 
                                         <td>
+                                            <Link :href="route('contract.show', contract.id)"
+                                                class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
+                                                <i class="ri-eye-line"></i>
+                                            </Link>
+                                            <div v-if="$page.props.auth.user.department == 'procurement'">
                                             <a aria-label="anchor" @click="editContract(contract)"
                                                 data-hs-overlay="#editModel" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-1">
@@ -435,7 +440,7 @@ defineProps({
                                                 data-hs-overlay="#deleteModel" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                 <i class="ri-delete-bin-line"></i>
-                                            </a>
+                                            </a></div>
                                         </td>
                                     </tr>
 

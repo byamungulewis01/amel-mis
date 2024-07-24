@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/active-contracts', 'activeContracts')->name('activeContracts');
         Route::get('/contracts/{id}', 'show')->name('show');
 
+
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -70,14 +71,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('/tenders', TenderController::class);
     Route::get('/tenders-new', [TenderController::class, 'new_tenders'])->name('tenders.new');
     Route::get('/tenders-list', [TenderController::class, 'tenders'])->name('tenders.list');
-    Route::post('/tender-cashRequest/{tender}', [TenderController::class, 'cashRequest'])->name('tender.cashRequest');
-    Route::put('/tender-cashRequest/{id}', [TenderController::class, 'cashRequestUpdate'])->name('tender.cashRequestUpdate');
-    Route::delete('/tender-cashRequest/{id}', [TenderController::class, 'cashRequestDelete'])->name('tender.cashRequestDelete');
-    Route::put('/tenders/approve/{id}', [TenderController::class, 'approve'])->name('tenders.approve');
-    Route::put('/tenders/closing/{id}', [TenderController::class, 'closing'])->name('tenders.closing');
+
 
     Route::controller(CashRequestController::class)->prefix('cash-request')->name('cashRequest.')->group(function () {
         Route::get('/field', 'fieldRequests')->name('field');
+        Route::get('/manager', 'managerRequests')->name('manager');
+
+        Route::post('/cashRequest/{contract}','cashRequest')->name('store');
+        Route::put('/cashRequest/{contract}','cashRequestUpdate')->name('update');
+        Route::delete('/cashRequest/{contract}','cashRequestDelete')->name('destroy');
+        Route::put('/cashRequest/approve/{contract}','approve')->name('approve');
+        Route::put('/cashRequest/reject/{contract}','reject')->name('reject');
+        Route::put('/cashRequest/closing/{contract}','closing')->name('closing');
     });
 
 

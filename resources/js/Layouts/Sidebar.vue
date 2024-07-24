@@ -43,12 +43,28 @@ import NavLink from '@/Components/NavLink.vue';
                                 <span class="side-menu__label">Users </span>
                             </NavLink>
                         </li>
+                        <li class="slide__category"><span class="category-name">Tenders</span></li>
                         <li class="slide">
                             <NavLink :href="route('tenders.list')" :active="route().current('tenders.list')">
                                 <i class="bx bx-task side-menu__icon"></i>
                                 <span class="side-menu__label">Tenders</span>
                             </NavLink>
                         </li>
+                        <li class="slide">
+                            <NavLink :href="route('contract.index')"
+                            :active="route().current('contract.index')">
+                                <i class="bx bx-book side-menu__icon"></i>
+                                <span class="side-menu__label">Contracts</span>
+                            </NavLink>
+                        </li>
+                        <li class="slide">
+                            <NavLink :href="route('cashRequest.manager')" :active="route().current('cashRequest.manager')">
+                                <i class="bx bx-bar-chart-square side-menu__icon"></i>
+                                <span class="side-menu__label">Cash Requests</span>
+                            </NavLink>
+                        </li>
+                        <li class="slide__category"><span class="category-name">Reports & Goals</span></li>
+
                         <li class="slide">
                             <NavLink :href="route('weekly_reports.list')"
                                 :active="route().current('weekly_reports.list') || route().current('weekly-reports.show')">

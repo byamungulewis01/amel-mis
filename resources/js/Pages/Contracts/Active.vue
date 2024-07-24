@@ -44,12 +44,7 @@ defineProps({
                         <div class="box-title">
                             All Contract List
                         </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button data-hs-overlay="#addModel"
-                                class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                                <i class="ri-add-line  align-middle"></i>New Contract
-                            </button>
-                        </div>
+            
                     </div>
                     <div class="box-body !p-0">
                         <div class="table-responsive">

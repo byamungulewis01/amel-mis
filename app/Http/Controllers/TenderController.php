@@ -166,26 +166,6 @@ class TenderController extends Controller
         }
         return Redirect::back()->with('message', 'Tender deleted successfully.');
     }
-    public function approve(string $id)
-    {
-        $tender = Tender::where('id', $id)->first();
-        $tender->update(['status' => 'in_progress', 'approved_by' => auth()->user()->id]);
-        return Redirect::back()->with('message', 'Tender approved successfully.');
-    }
-    public function closing(Request $request, string $id)
-    {
-        $request->validate([
-            'sold_amount' => 'required|numeric',
-            'sales_amount' => 'required|numeric',
-            'description' => 'nullable|max:255',
-        ]);
-        $request->merge([
-            'status' => 'complete',
-            'closed_by' => auth()->user()->id,
-        ]);
-        $tender = Tender::where('id', $id)->first();
-        $tender->update($request->all());
-        return Redirect::back()->with('message', 'Tender closed successfully.');
-    }
+    
 
 }
