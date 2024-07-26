@@ -62,7 +62,6 @@ defineProps({
                                         <th scope="col" class="text-start">Tender fees</th>
                                         <th scope="col" class="text-start">Bid Security</th>
                                         <th scope="col" class="text-start">Opening Date</th>
-                                        <th scope="col" class="text-start">Submitted Date</th>
                                         <th scope="col" class="text-start"></th>
                                     </tr>
                                 </thead>
@@ -74,8 +73,6 @@ defineProps({
                                         <td>{{ tender.tender_fees.toLocaleString() }}</td>
                                         <td>{{ tender.bid_security.toLocaleString() }}</td>
                                         <td>{{ tender.opening_date }}</td>
-                                        <td>{{ tender.submitted_date }}</td>
-
                                         <td>
                                             <Link :href="route('tenders.show',tender.id)" class="ti-btn ti-btn-primary me-1">
                                             More Details
