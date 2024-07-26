@@ -155,7 +155,7 @@ import { Head } from '@inertiajs/vue3';
                                             01
                                         </td>
                                         <td>
-                                            Tender A
+                                            Tender Sample A
                                         </td>
                                         <td>
                                             12,000
@@ -173,7 +173,7 @@ import { Head } from '@inertiajs/vue3';
                                             02
                                         </td>
                                         <td>
-                                            Tender B
+                                            Tender Sample B
                                         </td>
                                         <td>
                                             12,000
@@ -191,7 +191,7 @@ import { Head } from '@inertiajs/vue3';
                                             03
                                         </td>
                                         <td>
-                                            Tender C
+                                            Tender Sample C
                                         </td>
                                         <td>
                                             12,000
