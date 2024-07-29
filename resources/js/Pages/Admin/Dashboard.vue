@@ -86,8 +86,7 @@ defineProps({
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
                                             <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.contract }}</h5>
-                                            <div class="text-success font-semibold"><i
-                                                    class="ri-arrow-up-s-fill me-1 align-middle"></i>+0.40%</div>
+                                          
                                         </div>
                                         <p
                                             class="mb-0 text-[0.625rem] opacity-[0.7] text-[#8c9097] dark:text-white/50  font-semibold">
