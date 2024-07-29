@@ -470,7 +470,7 @@ defineProps({
                                         <th scope="col" class="text-start">Amount</th>
                                         <th scope="col" class="text-start">Status</th>
                                         <th scope="col" class="text-start">Date</th>
-                                        <th scope="col" class="text-start">Action</th>
+                                        <th scope="col" class="text-start">Action her </th>
                                     </tr>
                                 </thead>
                                 <tbody>
