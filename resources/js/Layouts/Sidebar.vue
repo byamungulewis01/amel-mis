@@ -44,8 +44,14 @@ import NavLink from '@/Components/NavLink.vue';
                             </NavLink>
                         </li>
                         <li class="slide__category"><span class="category-name">Tenders</span></li>
-                        <li class="slide">
+                        <!-- <li class="slide">
                             <NavLink :href="route('tenders.list')" :active="route().current('tenders.list')">
+                                <i class="bx bx-task side-menu__icon"></i>
+                                <span class="side-menu__label">Tenders</span>
+                            </NavLink>
+                        </li> -->
+                        <li class="slide">
+                            <NavLink :href="route('monthly-tenders.index')" :active="route().current('monthly-tenders.index') || route().current('tenders.index') || route().current('tenders.create') || route().current('tenders.edit') || route().current('tenders.show')">
                                 <i class="bx bx-task side-menu__icon"></i>
                                 <span class="side-menu__label">Tenders</span>
                             </NavLink>
@@ -101,12 +107,11 @@ import NavLink from '@/Components/NavLink.vue';
                     </div>
                     <div v-if="$page.props.auth.user.department == 'finance'">
                         <li class="slide">
-                            <NavLink :href="route('tenders.index')" :active="route().current('tenders.index')">
-                                <i class="bx bx-task side-menu__icon"></i>
-                                <span class="side-menu__label">Tenders</span>
+                            <NavLink :href="route('cashRequest.finance')" :active="route().current('cashRequest.finance')">
+                                <i class="bx bx-bar-chart-square side-menu__icon"></i>
+                                <span class="side-menu__label">Cash Requests</span>
                             </NavLink>
                         </li>
-
                     </div>
                     <div v-if="$page.props.auth.user.department == 'procurement'">
                         <li class="slide">

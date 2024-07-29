@@ -1,17 +1,14 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TenderController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContractController;
 use App\Http\Controllers\CashRequestController;
-use App\Http\Controllers\WeeklyReportController;
+use App\Http\Controllers\ContractController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MonthlyTendersController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TenderController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WeeklyReportController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,14 +25,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Admin/Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Admin/Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
 
@@ -54,7 +48,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/active-contracts', 'activeContracts')->name('activeContracts');
         Route::get('/contracts/{id}', 'show')->name('show');
 
-
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -72,21 +65,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/tenders-new', [TenderController::class, 'new_tenders'])->name('tenders.new');
     Route::get('/tenders-list', [TenderController::class, 'tenders'])->name('tenders.list');
 
-
     Route::controller(CashRequestController::class)->prefix('cash-request')->name('cashRequest.')->group(function () {
         Route::get('/field', 'fieldRequests')->name('field');
         Route::get('/manager', 'managerRequests')->name('manager');
+        Route::get('/finance', 'financeRequests')->name('finance');
 
-        Route::post('/cashRequest/{contract}','cashRequest')->name('store');
-        Route::put('/cashRequest/{contract}','cashRequestUpdate')->name('update');
-        Route::delete('/cashRequest/{contract}','cashRequestDelete')->name('destroy');
-        Route::put('/cashRequest/approve/{contract}','approve')->name('approve');
-        Route::put('/cashRequest/reject/{contract}','reject')->name('reject');
-        Route::put('/cashRequest/closing/{contract}','closing')->name('closing');
+        Route::post('/cashRequest/{contract}', 'cashRequest')->name('store');
+        Route::put('/cashRequest/{contract}', 'cashRequestUpdate')->name('update');
+        Route::delete('/cashRequest/{contract}', 'cashRequestDelete')->name('destroy');
+        Route::put('/cashRequest/approve/{contract}', 'approve')->name('approve');
+        Route::put('/cashRequest/reject/{contract}', 'reject')->name('reject');
+        Route::put('/cashRequest/closing/{contract}', 'closing')->name('closing');
+        Route::put('/cashRequest/finance-approve/{contract}', 'financeApprove')->name('financeApprove');
     });
-
-
-
 
     Route::resource('/weekly-reports', WeeklyReportController::class);
     Route::get('/weekly-reports-list', [WeeklyReportController::class, 'reports_list'])->name('weekly_reports.list');;

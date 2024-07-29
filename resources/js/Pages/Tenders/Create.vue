@@ -15,7 +15,8 @@ const form = useForm({
     other_fees: '',
     description: '',
     opening_date: '',
-    submitted_date: '',
+    closing_date: '',
+    organisation_name: '',
     bid_documents: [{ name: '', filePath: '' }],
 
 });
@@ -90,21 +91,31 @@ const removeDocument = (index) => {
 
                                     </div>
                                 </div>
-                                <div class="xl:col-span-6 col-span-6">
+                                <label for="organisation_name" class="sm:col-span-2 col-span-12 col-form-label">Organisation
+                                    Name</label>
+                                <div class="sm:col-span-10 col-span-12">
+                                    <div class="input-group">
+                                        <TextInput v-model="form.organisation_name" type="text" required id="organisation_name"
+                                            placeholder="Enter Organisation Name" />
+                                        <InputError class="mt-2" :message="form.errors.organisation_name" />
+
+                                    </div>
+                                </div>
+                                <div class="xl:col-span-4 col-span-6">
                                     <label for="tender_fees" class="form-label">Tender Fees</label>
                                     <TextInput v-model="form.tender_fees" type="number" min="0" id="tender_fees"
                                         required placeholder="Tender Fees" />
                                     <InputError class="mt-2" :message="form.errors.tender_fees" />
 
                                 </div>
-                                <div class="xl:col-span-6 col-span-6">
+                                <div class="xl:col-span-4 col-span-6">
                                     <label for="bid_security" class="form-label">Bid Security</label>
                                     <TextInput v-model="form.bid_security" type="number" min="0" id="bid_security"
                                         required placeholder="Bid Security" />
                                     <InputError class="mt-2" :message="form.errors.bid_security" />
 
                                 </div>
-                                <div class="xl:col-span-6 col-span-6">
+                                <div class="xl:col-span-4 col-span-6">
                                     <label for="other_fees" class="form-label">Other Fees</label>
                                     <TextInput v-model="form.other_fees" type="number" min="0" id="other_fees"
                                         required placeholder="Other fees" />
@@ -115,6 +126,12 @@ const removeDocument = (index) => {
                                     <label for="opening_date" class="form-label">Opening Date</label>
                                     <TextInput v-model="form.opening_date" type="date" id="opening_date" required />
                                     <InputError class="mt-2" :message="form.errors.opening_date" />
+
+                                </div>
+                                <div class="xl:col-span-6 col-span-6">
+                                    <label for="closing_date" class="form-label">Closing Date</label>
+                                    <TextInput v-model="form.closing_date" type="date" id="closing_date" required />
+                                    <InputError class="mt-2" :message="form.errors.closing_date" />
 
                                 </div>
                                 <div class="xl:col-span-12 col-span-12">

@@ -13,7 +13,7 @@ class ContractController extends Controller
 {
     public function index()
     {
-        $contracts = Contract::orderByDesc('created_at')->get();
+        $contracts = Contract::orderByDesc('created_at')->paginate(10);
         return Inertia::render('Contracts/Index', compact('contracts'));
     }
 
@@ -25,6 +25,7 @@ class ContractController extends Controller
             'value' => 'required|numeric',
             'description' => 'required',
             'signed_date' => 'required',
+            'ending_date' => 'required',
             'status' => 'required',
             'type' => 'required',
         ]);
@@ -46,6 +47,7 @@ class ContractController extends Controller
             'value' => 'required|numeric',
             'description' => 'required',
             'signed_date' => 'required',
+            'ending_date' => 'required',
             'status' => 'required',
             'type' => 'required',
         ]);

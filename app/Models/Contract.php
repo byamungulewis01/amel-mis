@@ -15,6 +15,7 @@ class Contract extends Model
         'description',
         'value',
         'signed_date',
+        'ending_date',
         'status',
         'type',
         'stored_by',

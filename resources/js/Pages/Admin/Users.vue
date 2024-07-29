@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import TablePagination from '@/Components/TablePagination.vue';
 // import { Inertia } from "@inertiajs/inertia";
 
 const status = {
@@ -367,7 +368,7 @@ defineProps({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in users" :key="user.id"
+                                    <tr v-for="user in users.data" :key="user.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                         <td>
                                             <div class="flex items-top flex-wrap">
@@ -420,34 +421,9 @@ defineProps({
                             </table>
                         </div>
                     </div>
-                    <!-- <div class="box-footer border-t-0">
-                        <div class="flex items-center flex-wrap overflow-auto">
-                            <div class="mb-2 sm:mb-0">
-                                Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                    class="bi bi-arrow-right ms-2 font-semibold"></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation">
-                                    <ul class="ti-pagination  mb-0">
-                                        <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Previous</a></li>
-                                        <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">1</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">2</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">3</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">4</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">5</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div> -->
+                   <!-- Pagination -->
+                   <TablePagination :links="users" />
+
                 </div>
             </div>
         </div>

@@ -17,8 +17,10 @@ class Tender extends Model
         'other_fees',
         'description',
         'opening_date',
+        'closing_date',
         'documents',
         'explainations',
+        'organisation_name',
         'stored_by',
     ];
     public function user()

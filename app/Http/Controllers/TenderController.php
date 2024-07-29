@@ -20,7 +20,7 @@ class TenderController extends Controller
      */
     public function index()
     {
-        $tenders = TenderResource::collection(Tender::where('stored_by', auth()->user()->id)->orderByDesc('created_at')->get());
+        $tenders = TenderResource::collection(Tender::where('monthly_tender_id', request('id'))->orderByDesc('created_at')->paginate(10));
         $tender = new MonthlyTenderResource(MonthlyTender::findOrFail(request('id')));
 
         return Inertia::render('Tenders/List', compact('tenders', 'tender'));
@@ -58,7 +58,9 @@ class TenderController extends Controller
             'tender_fees' => 'required|numeric',
             'other_fees' => 'required|numeric',
             'description' => 'required',
+            'organisation_name' => 'required',
             'opening_date' => 'required',
+            'closing_date' => 'nullable',
             'bid_documents' => 'required|array',
             'bid_documents.*.name' => 'required|string',
             'bid_documents.*.filePath' => 'required|mimes:pdf,jpg,png,jpeg,xlsx,xls,doc,docx,ppt,pptx|max:5120',
@@ -110,9 +112,10 @@ class TenderController extends Controller
             'tender_name' => 'required',
             'bid_security' => 'required|numeric',
             'tender_fees' => 'required|numeric',
+            'organisation_name' => 'required',
             'description' => 'required',
             'opening_date' => 'required',
-            'submitted_date' => 'required',
+            'closing_date' => 'nullable',
             'bid_documents.*' => 'nullable|file|mimes:pdf,jpg,png,jpeg,xlsx,xls,doc,docx,ppt,pptx|max:5120',
         ]);
 
@@ -166,6 +169,6 @@ class TenderController extends Controller
         }
         return Redirect::back()->with('message', 'Tender deleted successfully.');
     }
-    
+
 
 }

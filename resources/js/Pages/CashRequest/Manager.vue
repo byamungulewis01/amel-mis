@@ -8,6 +8,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Inertia } from "@inertiajs/inertia";
+import TablePagination from "@/Components/TablePagination.vue";
 const form = useForm({comment: ''});
 
 const status = {
@@ -156,7 +157,8 @@ const reject = () => {
                                         :key="cashrequest.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light"
                                     >
-                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ (cashrequests.meta.current_page - 1) *
+                                                cashrequests.meta.per_page + index + 1 }}</td>
                                         <td>{{ cashrequest.name }}</td>
                                         <td>
                                             <a
@@ -252,51 +254,8 @@ const reject = () => {
                             </table>
                         </div>
                     </div>
-                    <div class="box-footer border-t-0">
-                        <div class="flex items-center flex-wrap overflow-auto">
-                            <div class="mb-2 sm:mb-0">
-                                Showing <b>1</b> to <b>10</b> of
-                                <b>10</b> entries
-                                <i
-                                    class="bi bi-arrow-right ms-2 font-semibold"
-                                ></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation">
-                                    <ul class="ti-pagination mb-0">
-                                        <li class="page-item disabled">
-                                            <a
-                                                class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);"
-                                                >Previous</a
-                                            >
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link active px-3 py-[0.375rem]"
-                                                href="javascript:void(0);"
-                                                >1</a
-                                            >
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);"
-                                                >2</a
-                                            >
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);"
-                                                >Next</a
-                                            >
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+                    <TablePagination :links="cashrequests.meta" />
+
                 </div>
             </div>
         </div>

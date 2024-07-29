@@ -21,7 +21,7 @@ class WeeklyReportController extends Controller
     }
     public function reports_list()
     {
-        $reports = WeeklyReport::with('user')->orderByDesc('created_at')->get();
+        $reports = WeeklyReport::with('user')->orderByDesc('created_at')->paginate(10);
         return Inertia::render('Reports/List', compact('reports'));
     }
 

@@ -1,7 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-
+defineProps({
+    counts: Object,
+    tenders: Object,
+});
 </script>
 
 <template>
@@ -51,7 +54,7 @@ import { Head } from '@inertiajs/vue3';
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">5</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.employees }}</h5>
                                             <div class="text-danger font-semibold"><i
                                                     class="ri-arrow-down-s-fill me-1 align-middle"></i>-1.05%</div>
                                         </div>
@@ -82,7 +85,7 @@ import { Head } from '@inertiajs/vue3';
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">240</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.contract }}</h5>
                                             <div class="text-success font-semibold"><i
                                                     class="ri-arrow-up-s-fill me-1 align-middle"></i>+0.40%</div>
                                         </div>
@@ -111,7 +114,7 @@ import { Head } from '@inertiajs/vue3';
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">48</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.tender }}</h5>
                                             <div class="text-success font-semibold"><i
                                                     class="ri-arrow-up-s-fill me-1 align-middle"></i>+0.82%</div>
                                         </div>
@@ -144,116 +147,32 @@ import { Head } from '@inertiajs/vue3';
                                         <th scope="col" class="text-start">#</th>
                                         <th scope="col" class="text-start">Tender Name</th>
                                         <th scope="col" class="text-start">Amount</th>
-                                        <th scope="col" class="text-start">Status</th>
-                                        <th scope="col" class="text-start">Date</th>
+                                        <th scope="col" class="text-start">Organization</th>
+                                        <th scope="col" class="text-start">Opening Date</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-t border-defaultborder dark:border-defaultborder/10">
+                                    <tr v-for="(item, index) in tenders" :key="index" class="border-t border-defaultborder dark:border-defaultborder/10">
                                         <td>
-                                            01
+                                            0{{ index + 1 }}
                                         </td>
                                         <td>
-                                            Tender Sample A
+                                            {{ item.tender_name }}
                                         </td>
                                         <td>
-                                            12,000
+                                            {{ item.tender_fees.toLocaleString() }}
                                         </td>
-                                        <td>
-                                            <span class="badge bg-warning/10 text-warning">Pending</span>
-                                        </td>
-                                        <td>
-                                            29-05-2023
-                                        </td>
+                                        <td>{{ item.organisation_name }}</td>
+
+                                        <td>{{ item.opening_date }}</td>
 
                                     </tr>
-                                    <tr class="border-t border-defaultborder dark:border-defaultborder/10">
-                                        <td>
-                                            02
-                                        </td>
-                                        <td>
-                                            Tender Sample B
-                                        </td>
-                                        <td>
-                                            12,000
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-primary/10 text-primary">In Progress</span>
-                                        </td>
-                                        <td>
-                                            29-05-2023
-                                        </td>
-
-                                    </tr>
-                                    <tr class="border-t border-defaultborder dark:border-defaultborder/10">
-                                        <td>
-                                            03
-                                        </td>
-                                        <td>
-                                            Tender Sample C
-                                        </td>
-                                        <td>
-                                            12,000
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-warning/10 text-warning">Pending</span>
-                                        </td>
-                                        <td>
-                                            29-05-2023
-                                        </td>
-
-                                    </tr>
-                                    <tr class="border-t border-defaultborder dark:border-defaultborder/10">
-                                        <td>
-                                            04
-                                        </td>
-                                        <td>
-                                            Tender D
-                                        </td>
-                                        <td>
-                                            12,000
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-success/10 text-success">Complete</span>
-                                        </td>
-                                        <td>
-                                            29-05-2023
-                                        </td>
-
-                                    </tr>
-
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="box-footer">
-                        <div class="sm:flex items-center">
-                            <div class="text-defaulttextcolor dark:text-defaulttextcolor/70">
-                                Showing 5 Entries <i class="bi bi-arrow-right ms-2 font-semibold"></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation" class="pagination-style-4">
-                                    <ul class="ti-pagination mb-0">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="javascript:void(0);">
-                                                Prev
-                                            </a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link active"
-                                                href="javascript:void(0);">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link !text-primary" href="javascript:void(0);">
-                                                next
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
             <div class="xl:col-span-4 col-span-12">
@@ -262,24 +181,10 @@ import { Head } from '@inertiajs/vue3';
                             <div class="box-title">
                                 Recent Reports
                             </div>
-                            <div class="hs-dropdown ti-dropdown">
-                                <a href="javascript:void(0);"
-                                    class="px-2 font-normal text-[0.75rem] text-[#8c9097] dark:text-white/50"
-                                    aria-expanded="false">
-                                    View All<i class="ri-arrow-down-s-line align-middle ms-1 inline-block"></i>
-                                </a>
-                                <ul class="hs-dropdown-menu ti-dropdown-menu hidden" role="menu" style="">
-                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                            href="javascript:void(0);">Download</a></li>
-                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                            href="javascript:void(0);">Import</a></li>
-                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                            href="javascript:void(0);">Export</a></li>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="box-body">
-                            <ul class="list-none project-transactions-card">
+                            <!-- <ul class="list-none project-transactions-card">
                                 <li>
                                     <div class="flex items-start">
                                         <div class="me-3">
@@ -360,7 +265,7 @@ import { Head } from '@inertiajs/vue3';
 
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
             </div>

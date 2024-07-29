@@ -7,6 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 
 import { ref, onMounted } from 'vue';
+import TablePagination from '@/Components/TablePagination.vue';
 
 const currentMonth = ref('');
 const nextMonth = ref('');
@@ -267,7 +268,7 @@ defineProps({
                                             <i class="ri-eye-line"></i>
                                             </Link>
 
-                                            <a aria-label="anchor" data-hs-overlay="#deleteModel"
+                                            <a v-if="$page.props.auth.user.department == 'procurement'" aria-label="anchor" data-hs-overlay="#deleteModel"
                                                 @click="deleteModel(tender.id)" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                 <i class="ri-delete-bin-line"></i>
@@ -280,28 +281,8 @@ defineProps({
                             </table>
                         </div>
                     </div>
-                    <div class="box-footer border-t-0">
-                        <div class="flex items-center flex-wrap overflow-auto">
-                            <div class="mb-2 sm:mb-0">
-                                Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                    class="bi bi-arrow-right ms-2 font-semibold"></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation">
-                                    <ul class="ti-pagination  mb-0">
-                                        <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Previous</a></li>
-                                        <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">1</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">2</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+                    <TablePagination :links="monthlyTenders.meta" />
+
                 </div>
             </div>
         </div>

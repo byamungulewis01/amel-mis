@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import TablePagination from '@/Components/TablePagination.vue';
 
 const status = {
     sent: {
@@ -107,9 +108,10 @@ defineProps({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(report, index) in reports" :key="index"
+                                    <tr v-for="(report, index) in reports.data" :key="index"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ (reports.meta.current_page - 1) *
+                                                reports.meta.per_page + index + 1 }}</td>
                                         <td><span class="font-bold">{{ report.user.name }}</span></td>
                                         <td>Week {{ report.week_number }} Report</td>
                                         <td><i class="bi bi-clock me-1"></i>{{ report.date_from }}</td>
@@ -137,28 +139,8 @@ defineProps({
                             </table>
                         </div>
                     </div>
-                    <div class="box-footer border-t-0">
-                        <div class="flex items-center flex-wrap overflow-auto">
-                            <div class="mb-2 sm:mb-0">
-                                Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                    class="bi bi-arrow-right ms-2 font-semibold"></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation">
-                                    <ul class="ti-pagination  mb-0">
-                                        <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Previous</a></li>
-                                        <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">1</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">2</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+                    <TablePagination :links="reports" />
+
                 </div>
             </div>
         </div>

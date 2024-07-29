@@ -8,6 +8,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Inertia } from "@inertiajs/inertia";
+import TablePagination from '@/Components/TablePagination.vue';
 
 const status = {
     active: {
@@ -31,6 +32,7 @@ const form = useForm({
     value: '',
     type: '',
     signed_date: '',
+    ending_date: '',
     status: '',
     description: '',
 });
@@ -73,6 +75,7 @@ const updateContract = () => {
         value: selectedContract.value.value,
         type: selectedContract.value.type,
         signed_date: selectedContract.value.signed_date,
+        ending_date: selectedContract.value.ending_date,
         status: selectedContract.value.status,
         description: selectedContract.value.description,
     });
@@ -128,7 +131,7 @@ defineProps({
 
 <template>
 
-    <Head title="Contracts" />
+    <Head title="Contracts " />
 
     <AuthenticatedLayout>
         <!-- Page Header -->
@@ -171,7 +174,8 @@ defineProps({
                         </div>
 
                         <div id="addModel" class="hs-overlay hidden ti-modal">
-                            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
+                            <div
+                                class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
                                 <div class="ti-modal-content">
                                     <div class="ti-modal-header">
                                         <h6 class="modal-title text-[1rem] font-semibold">New Contract</h6>
@@ -213,20 +217,27 @@ defineProps({
                                                     <select v-model="form.type"
                                                         class="form-select rounded-sm !py-2 !px-3" id="type" required>
                                                         <option disabled selected="" value="">-- Select --</option>
-                                                        <option value="current">Current</option>
+                                                        <option value="lumpsum">Lumpsum</option>
                                                         <option value="framework">Framework</option>
                                                     </select>
                                                     <InputError class="mt-2" :message="form.errors.type" />
 
                                                 </div>
-                                                <div class="xl:col-span-6 col-span-12">
+                                                <div class="xl:col-span-4 col-span-12">
                                                     <label for="signed_date" class="form-label">Signed Date</label>
                                                     <TextInput v-model="form.signed_date" type="date" id="signed_date"
                                                         required />
                                                     <InputError class="mt-2" :message="form.errors.signed_date" />
 
                                                 </div>
-                                                <div class="xl:col-span-6 col-span-12">
+                                                <div class="xl:col-span-4 col-span-12">
+                                                    <label for="ending_date" class="form-label">Ending Date</label>
+                                                    <TextInput v-model="form.ending_date" type="date" id="ending_date"
+                                                        required />
+                                                    <InputError class="mt-2" :message="form.errors.ending_date" />
+
+                                                </div>
+                                                <div class="xl:col-span-4 col-span-12">
                                                     <label for="status" class="form-label">Status</label>
                                                     <select v-model="form.status"
                                                         class="form-select rounded-sm !py-2 !px-3" id="status" required>
@@ -268,7 +279,8 @@ defineProps({
                         </div>
 
                         <div v-if="showUpdateModal" id="editModel" class="hs-overlay hidden ti-modal">
-                            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
+                            <div
+                                class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-2xl md:w-full m-3 md:mx-auto">
                                 <div class="ti-modal-content">
                                     <div class="ti-modal-header">
                                         <h6 class="modal-title text-[1rem] font-semibold">Edit Contract</h6>
@@ -287,7 +299,8 @@ defineProps({
                                                         Number</label>
                                                     <TextInput v-model="selectedContract.contract_number" type="text"
                                                         id="contract_number" required placeholder="Contract Number" />
-                                                    <InputError class="mt-2" :message="$page.props.errors.contract_number" />
+                                                    <InputError class="mt-2"
+                                                        :message="$page.props.errors.contract_number" />
 
                                                 </div>
                                                 <div class="xl:col-span-12 col-span-12">
@@ -309,20 +322,29 @@ defineProps({
                                                     <select v-model="selectedContract.type"
                                                         class="form-select rounded-sm !py-2 !px-3" id="type" required>
                                                         <option disabled selected="" value="">-- Select --</option>
-                                                        <option value="current">Current</option>
+                                                        <option value="lumpsum">Lumpsum</option>
                                                         <option value="framework">Framework</option>
                                                     </select>
                                                     <InputError class="mt-2" :message="$page.props.errors.type" />
 
                                                 </div>
-                                                <div class="xl:col-span-6 col-span-12">
+                                                <div class="xl:col-span-4 col-span-12">
                                                     <label for="signed_date" class="form-label">Signed Date</label>
                                                     <TextInput v-model="selectedContract.signed_date" type="date"
                                                         id="signed_date" required />
-                                                    <InputError class="mt-2" :message="$page.props.errors.signed_date" />
+                                                    <InputError class="mt-2"
+                                                        :message="$page.props.errors.signed_date" />
 
                                                 </div>
-                                                <div class="xl:col-span-6 col-span-12">
+                                                <div class="xl:col-span-4 col-span-12">
+                                                    <label for="ending_date" class="form-label">Ending Date</label>
+                                                    <TextInput v-model="selectedContract.ending_date" type="date"
+                                                        id="ending_date" required />
+                                                    <InputError class="mt-2"
+                                                        :message="$page.props.errors.ending_date" />
+
+                                                </div>
+                                                <div class="xl:col-span-4 col-span-12">
                                                     <label for="status" class="form-label">Status</label>
                                                     <select v-model="selectedContract.status"
                                                         class="form-select rounded-sm !py-2 !px-3" id="status" required>
@@ -409,38 +431,41 @@ defineProps({
                                         <th scope="col" class="text-start">Contact Type</th>
                                         <th scope="col" class="text-start">Value</th>
                                         <th scope="col" class="text-start">Signed Date</th>
+                                        <th scope="col" class="text-start">Ending Date</th>
                                         <th scope="col" class="text-start">Status</th>
                                         <th scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(contract, index) in contracts" :key="contract.id"
+                                    <tr v-for="(contract, index) in contracts.data" :key="contract.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ (contracts.current_page - 1) * contracts.per_page + index + 1 }}</td>
                                         <td>{{ contract.contract_number }}</td>
                                         <td>{{ contract.name }}</td>
                                         <td>{{ contract.type.toUpperCase() }}</td>
                                         <td>{{ contract.value.toLocaleString() }}</td>
                                         <td><i class="bi bi-clock me-1"></i> {{ contract.signed_date }}</td>
+                                        <td><i class="bi bi-clock me-1"></i> {{ contract.ending_date }}</td>
                                         <td><span :class="status[contract.status].class">{{
                                             status[contract.status].title }}</span></td>
 
                                         <td>
                                             <Link :href="route('contract.show', contract.id)"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-1">
-                                                <i class="ri-eye-line"></i>
+                                            <i class="ri-eye-line"></i>
                                             </Link>
-                                            <div v-if="$page.props.auth.user.department == 'procurement'">
-                                            <a aria-label="anchor" @click="editContract(contract)"
+                                            <a v-if="$page.props.auth.user.department == 'procurement'"
+                                                aria-label="anchor" @click="editContract(contract)"
                                                 data-hs-overlay="#editModel" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-1">
                                                 <i class="ri-edit-line"></i>
                                             </a>
-                                            <a @click="deleteContract(contract.id)" aria-label="anchor"
+                                            <a v-if="$page.props.auth.user.department == 'procurement'"
+                                                @click="deleteContract(contract.id)" aria-label="anchor"
                                                 data-hs-overlay="#deleteModel" href="javascript:void(0);"
                                                 class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                 <i class="ri-delete-bin-line"></i>
-                                            </a></div>
+                                            </a>
                                         </td>
                                     </tr>
 
@@ -448,6 +473,8 @@ defineProps({
                             </table>
                         </div>
                     </div>
+                   <TablePagination :links="contracts" />
+
 
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import TablePagination from '@/Components/TablePagination.vue';
 const status = {
     new: {
         title: "New",
@@ -156,24 +157,29 @@ const tender = props.tender.data;
                                     <tr>
                                         <th scope="col" class="text-start">#</th>
                                         <th scope="col" class="text-start">Tender Name</th>
+                                        <th scope="col" class="text-start">Organisation</th>
                                         <th scope="col" class="text-start">Tender fees</th>
                                         <th scope="col" class="text-start">Bid Security</th>
                                         <th scope="col" class="text-start">Other fees</th>
                                         <th scope="col" class="text-start">Total Amount</th>
                                         <th scope="col" class="text-start">Opening Date</th>
+                                        <th scope="col" class="text-start">Closing Date</th>
                                         <th scope="col" class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(tender, index) in tenders.data" :key="tender.id"
                                         class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ (tenders.meta.current_page - 1) *
+                                                tenders.meta.per_page + index + 1 }}</td>
                                         <td>{{ tender.tender_name }}</td>
+                                        <td>{{ tender.organisation_name }}</td>
                                         <td>{{ tender.tender_fees.toLocaleString() }}</td>
                                         <td>{{ tender.bid_security.toLocaleString() }}</td>
                                         <td>{{ tender.other_fees.toLocaleString() }}</td>
                                         <td>{{ tender.total_amount.toLocaleString() }}</td>
                                         <td>{{ tender.opening_date }}</td>
+                                        <td>{{ tender.closing_date }}</td>
 
                                         <td>
                                             <Link :href="route('tenders.show', tender.id)"
@@ -198,28 +204,8 @@ const tender = props.tender.data;
                             </table>
                         </div>
                     </div>
-                    <div class="box-footer border-t-0">
-                        <div class="flex items-center flex-wrap overflow-auto">
-                            <div class="mb-2 sm:mb-0">
-                                Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                    class="bi bi-arrow-right ms-2 font-semibold"></i>
-                            </div>
-                            <div class="ms-auto">
-                                <nav aria-label="Page navigation">
-                                    <ul class="ti-pagination  mb-0">
-                                        <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Previous</a></li>
-                                        <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">1</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">2</a></li>
-                                        <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                href="javascript:void(0);">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+                    <TablePagination :links="tenders.meta" />
+
                 </div>
             </div>
         </div>

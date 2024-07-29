@@ -12,7 +12,7 @@ class MonthlyTendersController extends Controller
 {
     public function index()
     {
-        $monthlyTenders = MonthlyTenderResource::collection(MonthlyTender::orderByDesc('month')->get());
+        $monthlyTenders = MonthlyTenderResource::collection(MonthlyTender::orderByDesc('month')->paginate(10));
         return Inertia::render('Tenders/Index', compact('monthlyTenders'));
     }
     // store

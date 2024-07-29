@@ -19,8 +19,13 @@ class CashRequestController extends Controller
     }
     public function managerRequests()
     {
-        $cashrequests = CashRequestResource::collection(CashRequest::orderByDesc('created_at')->get());
+        $cashrequests = CashRequestResource::collection(CashRequest::orderByDesc('created_at')->paginate(10));
         return Inertia::render('CashRequest/Manager', compact('cashrequests'));
+    }
+    public function financeRequests()
+    {
+        $cashrequests = CashRequestResource::collection(CashRequest::orderByDesc('created_at')->paginate(10));
+        return Inertia::render('CashRequest/Finance', compact('cashrequests'));
     }
     public function cashRequest(Request $request, string $contract)
     {
@@ -109,6 +114,7 @@ class CashRequestController extends Controller
         ]);
         return Redirect::back()->with('message', 'Cash Request approved.');
     }
+
     public function reject(Request $request, string $id)
     {
         $request->validate([
@@ -136,4 +142,13 @@ class CashRequestController extends Controller
     //     $tender->update($request->all());
     //     return Redirect::back()->with('message', 'Tender closed successfully.');
     // }
+
+    public function financeApprove(string $id)
+    {
+        CashRequest::findOrFail($id)->update(['isMoneyRecieved' => true,
+            'moneySentby' => auth()->id(),
+            'moneyRecievedDate' => now(),
+        ]);
+        return Redirect::back()->with('message', 'Approved that money sent.');
+    }
 }

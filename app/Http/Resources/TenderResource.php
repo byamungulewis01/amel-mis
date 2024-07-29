@@ -24,6 +24,8 @@ class TenderResource extends JsonResource
             'other_fees' => (int) $this->other_fees,
             'description' => $this->description,
             'opening_date' => $this->opening_date,
+            'closing_date' => $this->closing_date,
+            'organisation_name' => $this->organisation_name,
             'total_amount'=> $this->bid_security + $this->tender_fees + $this->other_fees,
             'documents' => $this->documents,
             'stored_by' => $this->stored_by,

@@ -12,7 +12,7 @@ class UserController extends Controller
     //index
     public function index()
     {
-        $users = User::whereNot('department','admin')->orderByDesc('created_at')->get();
+        $users = User::whereNot('department','admin')->orderByDesc('created_at')->paginate(10);
         return Inertia::render('Admin/Users', array('users' => $users));
     }
     public function store(Request $request)
