@@ -2,7 +2,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 defineProps({
-    counts: Object,
+    employees: Number,
+    contracts: Number,
+    tenderCounts: Number,
     tenders: Object,
 });
 </script>
@@ -54,7 +56,7 @@ defineProps({
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">5</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ employees }}</h5>
                                             <div class="text-danger font-semibold"><i
                                                     class="ri-arrow-down-s-fill me-1 align-middle"></i>-1.05%</div>
                                         </div>
@@ -85,7 +87,7 @@ defineProps({
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.contract }}</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ contracts }}</h5>
 
                                         </div>
                                         <p
@@ -113,7 +115,7 @@ defineProps({
                                     </div>
                                     <div class="flex-grow">
                                         <div class="flex mb-1 items-start justify-between">
-                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ counts.tender }}</h5>
+                                            <h5 class="font-semibold mb-0 leading-none text-[1.25rem]">{{ tenderCounts }}</h5>
                                             <div class="text-success font-semibold"><i
                                                     class="ri-arrow-up-s-fill me-1 align-middle"></i>+0.82%</div>
                                         </div>

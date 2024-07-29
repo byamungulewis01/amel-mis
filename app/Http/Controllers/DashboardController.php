@@ -12,14 +12,14 @@ class DashboardController extends Controller
     //
     public function index()
     {
-        $counts = [
-            'employees' => User::count(),
-            'contract' => Contract::count(),
-            'tender' => Tender::count(),
-        ];
+        $employees = User::count();
+        $contracts = Contract::count();
+        $tenderCounts = Tender::count();
+
+
         $tenders = Tender::latest()->limit(5)->get();
 
 
-        return Inertia::render('Admin/Dashboard',compact('counts','tenders'));
+        return Inertia::render('Admin/Dashboard', compact('employees', 'contracts', 'tenderCounts', 'tenders'));
     }
 }
